@@ -7,7 +7,8 @@ __pycache__/
 *.so
 
 # tests
-test/output
+/test/output/*
+
 
 # Distribution / packaging
 .Python
@@ -106,3 +107,4 @@ venv.bak/
 # mypy
 .mypy_cache/
 /tests/output/text.csv
+/tests/output/affix.csv
