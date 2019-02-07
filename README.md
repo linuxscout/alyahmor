@@ -4,7 +4,7 @@ Arabic flexionnal morphology generator
 ## Description
 The Alyahmor produce a word form from (prefix, lemma, suffix).
 I has many fucntionalities:
-- Generate word from from given word and affixes
+- Generate word forms from given word and affixes
 - Generate all word forms by adding verbal or nominal affixes according to word type
 - Generate all affixes combination for verbs or nouns.
 

@@ -15,8 +15,11 @@
     Arabic noun stemmer
 """
 import re
+
+import itertools
 import pyarabic.araby as ar
 import stem_noun_const as SNC
+import basic_affixer
 def verify_affix(word, list_seg, affix_list):
     """
     Verify possible affixes in the resulted segments according
@@ -169,9 +172,22 @@ def check_clitic_affix(proclitic_nm, enclitic, suffix):
 
     return True
 
-class muwaled:
-    def __init(self,):
-        pass
+class noun_affixer(basic_affixer.basic_affixer):
+    def __init__(self,):
+        basic_affixer.basic_affixer.__init__(self,)
+
+        self.procletics = SNC.COMP_PREFIX_LIST
+        #~ # get prefixes
+        self.prefixes = []
+        # get suffixes
+        self.suffixes = SNC.CONJ_SUFFIX_LIST
+        # get enclitics:
+        self.enclitics = SNC.COMP_SUFFIX_LIST
+        self.affixes = SNC.NOMINAL_CONJUGATION_AFFIX
+        self.clitics = SNC.COMP_NOUN_AFFIXES
+    @staticmethod
+    def check_clitic_affix(proclitic, enclitic, affix):        
+        return check_clitic_affix(proclitic, enclitic, affix)             
 
     @staticmethod
     def get_stem_variants(stem, suffix_nm):
@@ -494,4 +510,41 @@ class muwaled:
             s for s in list_seg
             if '-'.join([word[:s[0]], word[s[1]:]]) in affix_list
         ]
-
+    def get_form(self,word, proc, pref="", suff="", enc=""):
+        """ generate noun form """
+        newword = ""
+        if self.is_valid_clitics(proc, enc):
+            if self.check_clitic_affix(proc, enc, suff):
+                #~ print(arepr(element))
+                newword = self.vocalize(word, proc, suff, enc)
+              
+        return newword               
+        
+    def generate_forms(self, word):
+        """ generate all possible affixes"""
+        # get procletics
+        noun_forms = []
+        #~ word = u"قَصْدٌ"
+        for element in itertools.product(self.procletics, 
+        self.suffixes, self.enclitics):
+            proc = element[0]
+            suff = element[1]
+            enc = element[2]
+            affix = u"-".join([proc, enc])
+            newword = self.get_form(word, proc, "",suff, enc)
+            if newword:
+                noun_forms.append(newword)            
+        return noun_forms                
+    def generate_affix_list(self,):
+        """ generate all affixes """
+        word = u"قصد"    
+        # generate all possible word forms
+        noun_forms = self.generate_forms(word)
+        # remove diacritics
+        list_affixes = [ araby.strip_tashkeel(d[0]) for d in noun_forms]
+        # remove duplicated
+        list_affixes = list(set(list_affixes))
+        # remove stem and get only affixes
+        list_affixes = [ x.replace(word,'-') for x in list_affixes]
+         
+        return list_affixes 

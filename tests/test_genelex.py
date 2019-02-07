@@ -48,12 +48,28 @@ def main(args):
     for word, wtype in tuple_list:
         if wtype == "noun":
             print('************Noun*****')
-            noun_forms = generator.generate_noun_forms(word)
-            print(arepr(noun_forms).replace('),', '),\n'))
+            list_forms = generator.generate_noun_forms(word)
+            #~ print(arepr(noun_forms).replace('),', '),\n').replace('],', '],\n'))
+            unv_forms = generator.get_unvocalized_forms(list_forms)
+            #~ print(u"\n".join((unv_forms)).encode('utf8'))
+            voc_forms = generator.get_vocalized_forms(list_forms)
+            #~ print(u"\n".join((voc_forms)).encode('utf8')) 
+            voc_forms_dict = generator.get_vocalized_forms_dict(list_forms)
+            print(arepr(voc_forms_dict).replace('],', '],\n'))
+
         if wtype == "verb":
             print('************verb*****')
-            verb_forms =generator.generate_verb_forms(word)
-            print(arepr(verb_forms).replace('),', '),\n'))
+            list_forms =generator.generate_verb_forms(word)
+            #~ print(arepr(verb_forms).replace('),', '),\n').replace('],', '],\n'))
+            unv_forms = generator.get_unvocalized_forms(list_forms)
+            #~ print(u"\n".join((unv_forms)).encode('utf8'))
+            voc_forms = generator.get_vocalized_forms(list_forms)
+            #~ print(u"\n".join((voc_forms)).encode('utf8'))
+            voc_forms_dict = generator.get_vocalized_forms_dict(list_forms[:10])
+            print(arepr(voc_forms_dict).replace('],', '],\n'))
+
+            
+            
 
 if __name__ == '__main__':
     import sys

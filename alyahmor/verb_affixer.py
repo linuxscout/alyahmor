@@ -1,7 +1,7 @@
 ﻿#!/usr/bin/python
 # -*- coding = utf-8 -*-
 #-----------------------------------------------------------------------
-# Name:        stem_verb
+# Name:        verb_affixer
 # Purpose:     Arabic lexical analyser, provides feature for
 #  stemming arabic word as verb
 #
@@ -14,8 +14,11 @@
 """
     Arabic verb stemmer
 """
+
+import itertools
 import pyarabic.araby as ar
 import stem_verb_const as SVC
+import basic_affixer
 def verify_affix(word, list_seg, affix_list):
     """
     Verify possible affixes in the resulted segments
@@ -93,10 +96,23 @@ def check_clitic_affix(proclitic, enclitic, affix):
     #~ self.compatibility_cache[comp_key] = False
     return False
 
-class muwaled:
+class verb_affixer(basic_affixer.basic_affixer):
     def __init__(self, ):
-        pass
+        basic_affixer.basic_affixer.__init__(self,)
+        self.procletics = SVC.COMP_PREFIX_LIST
+        #~ # get prefixes
+        self.prefixes = SVC.CONJ_PREFIX_LIST
+        # get suffixes
+        self.suffixes = SVC.CONJ_SUFFIX_LIST
+        # get enclitics:
+        self.enclitics = SVC.COMP_SUFFIX_LIST
+        
+        self.affixes = SVC.VERBAL_CONJUGATION_AFFIX
+        #~ self.clitics = SVC.CONJ_VER_AFFIXES
 
+    @staticmethod
+    def check_clitic_affix(proclitic, enclitic, affix):        
+        return check_clitic_affix(proclitic, enclitic, affix)  
     @staticmethod
     def get_verb_variants(verb):
         """ return modified forms of input verb"""
@@ -171,3 +187,34 @@ class muwaled:
         semivocalized = ''.join(
             [proclitic_voc, ar.strip_lastharaka(verb), enclitic_voc])
         return (vocalized, semivocalized)
+    def generate_forms(self, word):
+        """ generate all possible affixes"""
+        # get procletics
+
+        #~ word = u"قصد"
+        verb_forms =[]
+        for element in itertools.product(self.procletics,  self.prefixes, self.suffixes, self.enclitics):
+            proc = element[0]
+            pref = element[1]
+            suff = element[2]
+            enc = element[3]
+            newword = self.get_form(word, proc, pref, suff, enc)
+            if newword:
+                verb_forms.append(newword)
+        return verb_forms
+        
+    def get_form(self, word, proc, pref, suff, enc):
+        """ generate the possible affixes"""
+        # get procletics
+
+        #~ word = u"قصد"
+        newword = u""
+        if self.is_valid_affix(pref, suff):
+            if self.check_clitic_affix(proc, enc, pref+'-'+suff):
+                #~ print(arepr(element))
+                conj_verb = u"".join([pref, word,suff])
+                newword = self.vocalize(conj_verb, proc,  enc)
+        return newword
+        
+
+        
