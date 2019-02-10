@@ -1,5 +1,5 @@
 #/usr/bin/sh
-# Build pyArabic package
+# Build alyahmor package
 
 default: all
 # Clean build files
@@ -30,12 +30,12 @@ install3:
 sdist:
 	sudo python setup.py sdist
 upload:
-	echo "use twine upload dist/Tashaphyne-0.3-py2-none-any.whl"
+	echo "use twine upload dist/alyahmor-0.1-py2-none-any.whl"
 
 doc:
 	epydoc -v --config epydoc.conf
 test:
-	cd tests;python test_genelex.py -f samples/text.txt -o output/text.csv > output/text.txt
+	cd tests;python test_genelex.py -f samples/text.txt -o output/text.csv > output/text.out.txt
 testaffix:
-	cd tests;python test_print_affix.py > output/affixes.csv
+	cd tests;python test_print_affixes.py > output/affixes.csv
 

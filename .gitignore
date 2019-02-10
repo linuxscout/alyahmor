@@ -108,3 +108,4 @@ venv.bak/
 .mypy_cache/
 /tests/output/text.csv
 /tests/output/affix.csv
+/tests/output/text.txt

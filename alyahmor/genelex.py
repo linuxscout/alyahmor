@@ -20,8 +20,8 @@
 #  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 #  MA 02110-1301, USA.
 #  
-#  
-
+#
+from __future__ import absolute_import
 import itertools
 from pyarabic.arabrepr import arepr
 import pyarabic.araby as araby
@@ -32,7 +32,54 @@ class genelex:
         self.verb_vocalizer = verb_affixer.verb_affixer()        
         self.noun_vocalizer = noun_affixer.noun_affixer()        
         pass
+    def generate_forms(self, word, word_type="noun", vocalized=True, indexed=False):
+        """
+        Generate forms fo a given word
         
+        @param word: the input word
+        @type word: unicode
+        @param type: (noun, verb, stop word): the default is "noun"
+        @type type: unicode
+        @param vocalized: if the result must be vocalized or not, default is True
+        @type vocalized: boolean
+        @param indexed: the forms diplayed as dictionary with unvocalized forms as keys, and for 
+        each key, we give all possible vocalization
+        @type indexed: boolean, default False
+        @return : all vocalized forms of input word
+        @rtype:  tuple list, list or dict 
+        """
+        wtype = word_type
+        if wtype=="noun":
+            forms = self.generate_noun_forms(word)        
+        elif wtype=="verb":
+            forms = self.generate_verb_forms(word)            
+
+        else:
+            forms = self.generate_noun_forms(word)
+        if not indexed:
+            if vocalized:
+                return self.get_vocalized_forms(forms)
+            else:
+                return self.get_unvocalized_forms(forms)
+        else:
+            return self.get_vocalized_forms_dict(forms)
+            
+    def generate_affix_list(self, word_type="noun", vocalized=True, indexed= False):
+        wtype= word_type
+        if wtype=="noun":
+            affix_list=  self.generate_noun_affix_list()
+        elif wtype=="verb":
+            affix_list=  self.generate_verb_affix_list()            
+        else:
+            affix_list=  self.generate_noun_affix_list()            
+        if not indexed:
+            if vocalized:
+                return affix_list
+            else:
+                return self.get_unvocalized_affix_list(affix_list)
+        else:
+            return self.get_vocalized_affixes_dict(affix_list)
+            
     def generate_noun_forms(self, word):
         """ generate all possible affixes"""
         # get procletics
@@ -73,6 +120,8 @@ class genelex:
         voc_forms.sort()
         return voc_forms 
 
+
+        
     def get_vocalized_forms_dict(self, forms = []):
         """ display vocalized forms in a dict"""
         forms_dict = {}
@@ -86,7 +135,32 @@ class genelex:
         for key in forms_dict:
             forms_dict[key].sort()
             forms_dict[key] = list(set(forms_dict[key]))
-        return forms_dict       
+        return forms_dict 
+        
+    def get_unvocalized_affix_list(self, forms=[]):
+        """ display vocalized forms"""
+        if not forms:
+            return []
+        voc_forms = [araby.strip_tashkeel(t) for t in forms]
+        voc_forms = list(set(voc_forms))
+        voc_forms.sort()
+        return voc_forms
+        
+    def get_vocalized_affixes_dict(self, forms = []):
+        """ display vocalized affixes in a dict"""
+        forms_dict = {}
+        if forms:
+            for form in forms:
+                unvoc = araby.strip_tashkeel(form)
+                if unvoc in forms_dict:
+                    forms_dict[unvoc].append(form)
+                else:
+                   forms_dict[unvoc] = [form,]
+        for key in forms_dict:
+            if len(forms_dict[key])>=2:
+                forms_dict[key].sort()
+                forms_dict[key] = list(set(forms_dict[key]))
+        return forms_dict 
     
 def main(args):
     word = u"قَصْدٌ"

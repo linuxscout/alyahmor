@@ -14,7 +14,7 @@
 """
     Arabic verb stemmer
 """
-
+import pyarabic.araby as araby
 import itertools
 class basic_affixer:
     def __init__(self, ):
@@ -86,13 +86,16 @@ class basic_affixer:
         return newword
         
 
-    def generate_affix_list(self, ):
+    def generate_affix_list(self, vocalized=True ):
         """ generate all affixes """
         word = u"قصد"    
         # generate all possible word forms
         forms = self.generate_forms(word)
         # remove diacritics
-        list_affixes = [ araby.strip_tashkeel(d[0]) for d in forms]
+        if not vocalized :
+            list_affixes = [ araby.strip_tashkeel(d[0]) for d in forms]
+        else:
+            list_affixes = [d[0] for d in forms]
         # remove duplicated
         list_affixes = list(set(list_affixes))
         # remove stem and get only affixes

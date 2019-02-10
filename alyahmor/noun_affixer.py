@@ -510,9 +510,11 @@ class noun_affixer(basic_affixer.basic_affixer):
             s for s in list_seg
             if '-'.join([word[:s[0]], word[s[1]:]]) in affix_list
         ]
+
     def get_form(self,word, proc, pref="", suff="", enc=""):
         """ generate noun form """
         newword = ""
+        #~ proc = araby.strip_tashkeel(proc)
         if self.is_valid_clitics(proc, enc):
             if self.check_clitic_affix(proc, enc, suff):
                 #~ print(arepr(element))
@@ -534,14 +536,18 @@ class noun_affixer(basic_affixer.basic_affixer):
             newword = self.get_form(word, proc, "",suff, enc)
             if newword:
                 noun_forms.append(newword)            
-        return noun_forms                
-    def generate_affix_list(self,):
+        return noun_forms     
+                   
+    def generate_affix_list(self, vocalized=True):
         """ generate all affixes """
         word = u"قصد"    
         # generate all possible word forms
         noun_forms = self.generate_forms(word)
         # remove diacritics
-        list_affixes = [ araby.strip_tashkeel(d[0]) for d in noun_forms]
+        if not vocalized:
+            list_affixes = [ ar.strip_tashkeel(d[0]) for d in noun_forms]
+        else:
+            list_affixes = [ d[0] for d in noun_forms]
         # remove duplicated
         list_affixes = list(set(list_affixes))
         # remove stem and get only affixes
