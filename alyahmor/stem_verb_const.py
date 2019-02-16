@@ -289,10 +289,10 @@ COMP_SUFFIX_LIST_TAGS = {
         'tags': (u"مفعول به", ),
         "vocalized": (u"نِي", ),
     },
-    u'ي': {
-        'tags': (u"مفعول به", ),
-        "vocalized": (u"ي", ),
-    },
+    #~ u'ي': {
+        #~ 'tags': (u"مفعول به", ),
+        #~ "vocalized": (u"ي", ),
+    #~ },
     u'ك': {
         'tags': (u"مفعول به", ),
         "vocalized": (u"كَ", ),
@@ -344,7 +344,7 @@ CONJ_MAX_SUFFIX = 3
 CONJ_MIN_STEM = 2
 CONJ_JOKER = u"*"
 CONJ_PREFIX_LIST = ("", ar.ALEF, ar.YEH, ar.TEH, ar.NOON,
-                    ar.ALEF_HAMZA_ABOVE, ar.HAMZA)
+                    ar.ALEF_HAMZA_ABOVE)
 CONJ_SUFFIX_LIST = (
     "",
     ar.TEH,
@@ -395,7 +395,7 @@ SUFFIX_LIST_VOWELED = set([
     ar.TEH + ar.MEEM,
 ])
 PREFIX_LIST_STRIPOUS = (ar.YEH, ar.TEH, ar.NOON,
-                        ar.ALEF_HAMZA_ABOVE, ar.HAMZA)
+                        ar.ALEF_HAMZA_ABOVE)
 VERBAL_CONJUGATION_AFFIX = set([
     u'-',
     u'-ا',

@@ -19,6 +19,7 @@ import itertools
 import pyarabic.araby as ar
 import stem_verb_const as SVC
 import basic_affixer
+import libqutrub.classverb
 def verify_affix(word, list_seg, affix_list):
     """
     Verify possible affixes in the resulted segments
@@ -35,6 +36,40 @@ def verify_affix(word, list_seg, affix_list):
     return [s for s in list_seg
         if '-'.join([word[:s[0]], word[s[1]:]]) in affix_list ]
 
+def check_clitic_tense(proclitic, enclitic, tense, pronoun,
+                         transitive):
+    """
+    test if the given tenses are compatible with proclitics
+    """
+    # proaffix key
+    comp_key = u":".join(
+        [proclitic, enclitic, tense, pronoun,
+         str(transitive)])
+    # إذا كان الزمن مجهولا لا يرتبط مع الفعل اللازم
+    if not transitive and tense in SVC.qutrubVerbConst.TablePassiveTense:
+        return False
+    if not proclitic and not enclitic:
+        return True
+    # The passive tenses have no enclitics
+    #ﻷزمنة المجهولة ليس لها ضمائر متصلة في محل نصب مفعول به
+    #لأنّ مفعولها يصبح نائبا عن الفاعل
+
+    if enclitic and tense in SVC.qutrubVerbConst.TablePassiveTense:
+        return False
+
+    #~ elif enclitic and think_trans and pronoun
+    # لا سابقة
+    # أو سابقة ، والزمن مسموح لها
+    # لا لاحقة
+    #أو زمن مسموح لتلك اللاحقة
+    elif ((not proclitic
+           or tense in SVC.EXTERNAL_PREFIX_TABLE.get(proclitic, ''))
+          and (not enclitic
+               or pronoun in SVC.EXTERNAL_SUFFIX_TABLE.get(enclitic, ''))):
+        return True
+
+    else:
+        return False
 
 def check_clitic_affix(proclitic, enclitic, affix):
     """
@@ -109,7 +144,11 @@ class verb_affixer(basic_affixer.basic_affixer):
         
         self.affixes = SVC.VERBAL_CONJUGATION_AFFIX
         #~ self.clitics = SVC.CONJ_VER_AFFIXES
-
+        # get only vocalized affixes
+        #~ self.procletics = [ p for p  in self.procletics if ar.is_vocalized(p)]
+        #~ self.prefixes = [ p for p  in self.prefixes if ar.is_vocalized(p)]
+        #~ self.suffixes = [ p for p  in self.suffixes if ar.is_vocalized(p)]
+        #~ self.clitics = [ p for p  in self.clitics if ar.is_vocalized(p)]
     @staticmethod
     def check_clitic_affix(proclitic, enclitic, affix):        
         return check_clitic_affix(proclitic, enclitic, affix)  
@@ -187,7 +226,7 @@ class verb_affixer(basic_affixer.basic_affixer):
         semivocalized = ''.join(
             [proclitic_voc, ar.strip_lastharaka(verb), enclitic_voc])
         return (vocalized, semivocalized)
-    def generate_forms(self, word):
+    def generate_forms(self, word, to_generate_affix = False):
         """ generate all possible affixes"""
         # get procletics
 
@@ -198,23 +237,41 @@ class verb_affixer(basic_affixer.basic_affixer):
             pref = element[1]
             suff = element[2]
             enc = element[3]
-            newword = self.get_form(word, proc, pref, suff, enc)
-            if newword:
-                verb_forms.append(newword)
+            
+            newwordlist = self.get_form(word, proc, pref, suff, enc, to_generate_affix)
+            if newwordlist:
+                verb_forms.extend(newwordlist)
         return verb_forms
         
-    def get_form(self, word, proc, pref, suff, enc):
+    def get_form(self, word, proc, pref, suff, enc, to_generate_affix = False):
         """ generate the possible affixes"""
         # get procletics
 
         #~ word = u"قصد"
+        list_word = []
         newword = u""
+        transitive = True
+        
+        future_type= ar.FATHA
+        vbc = libqutrub.classverb.VerbClass(word, transitive,future_type)        
         if self.is_valid_affix(pref, suff):
-            if self.check_clitic_affix(proc, enc, pref+'-'+suff):
+            affix = pref+'-'+suff
+            if self.check_clitic_affix(proc, enc, affix):
                 #~ print(arepr(element))
-                conj_verb = u"".join([pref, word,suff])
-                newword = self.vocalize(conj_verb, proc,  enc)
-        return newword
+                if affix in SVC.TABLE_AFFIX:
+                    for pair in SVC.TABLE_AFFIX[affix]:
+                        tense = pair[0]
+                        pronoun = pair[1]
+                        test = check_clitic_tense(proc, enc,
+                                                         tense, pronoun, transitive)
+                        if test:
+                            if not  to_generate_affix:
+                                conj_verb = vbc.conjugate_tense_for_pronoun(tense, pronoun)
+                            else:
+                                conj_verb = u"".join([pref, word,suff])
+                            newword = self.vocalize(conj_verb, proc,  enc)
+                            list_word.append(newword)
+        return list_word
         
 
         

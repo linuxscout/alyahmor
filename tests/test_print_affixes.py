@@ -15,8 +15,7 @@ def main(args):
     
     print('VERB_AFFIX_LIST=')
     verb_affixes = generator.generate_affix_list(word_type="verb", vocalized=False)
-    print(arepr(verb_affixes).replace('],', '],\n'))
-    print(arepr(verb_affixes).replace(',', ',\n'))
+    print(arepr(verb_affixes).replace('],', '],\n')).replace(',', ',\n'))
     return 0
 if __name__ == '__main__':
     import sys

@@ -109,45 +109,25 @@ def eval_datatest(dataset):
     generator = alyahmor.genelex.genelex()
     verb_affix =generator.generate_affix_list(word_type="verb", vocalized=True)
     noun_affix =generator.generate_affix_list(word_type="noun", vocalized=True)
-    #~ return noun_forms, verb_forms     
-    # the data set contains a list of vocalized affix
-    #~ affix_nm = araby.strip_tashkeel(affix)
-    # if vocalized affix in datatest
-    #~ df2 =  df.loc[(df['type']=="verb")&(df['value']=="ok")&(~df['affix'].isin(verb_affix))]
-    #~ df3 =  df.loc[(df['type']=="noun")&(df['value']=="ok")&(~df['affix'].isin(noun_affix))]
-    # True positif, target affixes are ok, generate affixes are ok, 
-    #~ df2 =  df.loc[(df['value']=="ok") & (
-    #~ ((df['type']=="verb")&(df['affix'].isin(verb_affix))) |
-    #~ ((df['type']=="noun")&(df['affix'].isin(noun_affix))))]
-    #~ TP = len(df2)
-    #~ # False positif, target affixes are No (mentioned as no or not existant), generate affixes are ok (generated),
-    #~ df5 =  df.loc[(df['value']=="no") & (
-    #~ ((df['type']=="verb")&(df['affix'].isin(verb_affix))) |
-    #~ ((df['type']=="noun")&(df['affix'].isin(noun_affix))))] 
-    #~ FP = len(df5)   
-    #~ # False Negatif, target affixes are Ok, generate affixes are No (not generated), 
-    #~ df3 =  df.loc[(df['value']=="ok") & (
-    #~ ((df['type']=="verb")&(~df['affix'].isin(verb_affix))) |
-    #~ ((df['type']=="noun")&(~df['affix'].isin(noun_affix))))] 
-    #~ FN = len(df3) 
-    #~ # True Negatif, target affixes are No (mentioned as no), generate affixes are No (not generated),         
-    #~ df4 =  df.loc[(df['value']=="no") & (
-    #~ ((df['type']=="verb")&(~df['affix'].isin(verb_affix))) |
-    #~ ((df['type']=="noun")&(~df['affix'].isin(noun_affix))))]
-    #~ TN = len(df3) 
-    
-
-    #~ print(len(df))
-    #~ print(len(df2))
-    #~ print({'TP':TP,'TN':TN, 'FP':FP, 'FN':FN})
     df['metric'] = df.apply(lambda row: metric_test(row["affix"],row["type"], row["value"], noun_affix, verb_affix), axis=1)
     TP = df[df.metric == "TP"]['affix'].count()
     TN = df[df.metric == "TN"]['affix'].count()
     FP = df[df.metric == "FP"]['affix'].count()
     FN = df[df.metric == "FN"]['affix'].count()
-    print({'TP':TP,'TN':TN, 'FP':FP, 'FN':FN})
     
-    return True
+    verb_affix_unknown = [ aff for aff in verb_affix if aff in df[df.type == "verb"]['affix']]
+    noun_affix_unknown = [ aff for aff in noun_affix if aff in df[df.type == "noun"]['affix']]
+    print({'unkonwn noun affix': len(noun_affix_unknown),
+            'unkonwn verb affix': len(verb_affix_unknown),
+            })    
+    print({'TP':TP,'TN':TN, 'FP':FP, 'FN':FN})
+    print({'Accuracy': (TP+TN)*100.0/(TP+TN+FP+FN),
+            'F1 score': 2*TP*100.0/(2*TP+FP+FN),
+            'Recall': TP*100.0/(TP+FN),
+            'Precision': TP*100.0/(TP+FP),
+            })
+
+    return df
 
 def main(args):
     args = grabargs()
@@ -170,7 +150,8 @@ def main(args):
     df = read_dataset("samples/dataset.csv")
     print(df.head())
     result = eval_datatest(df)
-    print(result)
+    df3 = result[(result.metric == "FP")|(result.metric == "TN")]
+    df3.to_csv(outfile, encoding='utf8', sep='\t')
             
 
 if __name__ == '__main__':

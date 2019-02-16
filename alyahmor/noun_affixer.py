@@ -139,13 +139,21 @@ def check_clitic_affix(proclitic_nm, enclitic, suffix):
     # in some cases the suffixes have more cases
     # add this cases to suffix tags
     suffix_tags += SNC.CONJ_SUFFIX_LIST_TAGS[suffix].get("cases", ())
-    if u"تعريف" in proclitic_tags and u"مضاف" in suffix_tags and \
-    u'مضاف' not in enclitic_tags:
-        return False
-    elif u"تعريف" in proclitic_tags and u"تنوين" in suffix_tags:
+    # المقيمو الصلاة
+    # المقيمي الصلاة
+   
+    #~ if u"تعريف" in proclitic_tags and u"مضاف" in suffix_tags and \
+    #~ u'مضاف' not in enclitic_tags:
+        #~ return False
+
+    if u"تعريف" in proclitic_tags and u"تنوين" in suffix_tags:
         return False
     elif u"تعريف" in proclitic_tags and u"إضافة" in suffix_tags:
         return  False
+        
+    #~ elif u"تعريف" in proclitic_tags and suffix == ar.YEH and u"مضاف"  in suffix_tags and \
+    #~ enclitic:
+        #~ return False         
 
 
 # الجر  في حالات الاسم المعرفة بال أو الإضافة إلى ضمير أو مضاف إليه
@@ -156,6 +164,8 @@ def check_clitic_affix(proclitic_nm, enclitic, suffix):
     elif u"مضاف" in enclitic_tags and u"لايضاف" in suffix_tags:
         return  False
     elif u"جر" in proclitic_tags and u"مجرور" not in suffix_tags:
+        return False
+    elif enclitic.startswith(ar.YEH) and suffix.endswith(ar.DAMMA):
         return False
 
 
@@ -185,6 +195,13 @@ class noun_affixer(basic_affixer.basic_affixer):
         self.enclitics = SNC.COMP_SUFFIX_LIST
         self.affixes = SNC.NOMINAL_CONJUGATION_AFFIX
         self.clitics = SNC.COMP_NOUN_AFFIXES
+        
+        # get only vocalized affixes
+        #~ self.procletics = [ p for p  in self.procletics if ar.is_vocalized(p)]
+        # self.prefixes = [ p for p  in self.prefixes if ar.is_vocalized(p)]
+        #~ self.suffixes = [ p for p  in self.suffixes if ar.is_vocalized(p)]
+        #~ self.clitics = [ p for p  in self.clitics if ar.is_vocalized(p)]
+        
     @staticmethod
     def check_clitic_affix(proclitic, enclitic, affix):        
         return check_clitic_affix(proclitic, enclitic, affix)             
@@ -269,6 +286,13 @@ class noun_affixer(basic_affixer.basic_affixer):
             suffix_non_irab_mark = ar.strip_lastharaka(newsuffix)
         else:
             suffix_non_irab_mark = newsuffix
+            
+        #~ if suffix.endswith(ar.YEH+ar.SHADDA+ ar.DAMMA) and enclitic_nm.startswith(ar.YEH):
+            #~ newsuffix = ar.YEH+ar.SHADDA+ ar.DAMMA
+            #~ suffix_non_irab_mark = ar.YEH+ar.SHADDA            
+        #~ if suffix.endswith(ar.DAMMA) and enclitic_nm.startswith( ar.YEH):
+            #~ newsuffix = suffix[:-1] + ar.KASRA
+            #~ suffix_non_irab_mark = suffix[:-1]            
         return newsuffix, suffix_non_irab_mark
 
     @staticmethod
@@ -294,6 +318,24 @@ class noun_affixer(basic_affixer.basic_affixer):
             enclitic_voc = enclitic_voc.replace(ar.HEH + ar.DAMMA,
                                                 ar.HEH + ar.KASRA)
             #print "ok"
+        if enclitic_voc.startswith(ar.YEH):
+            # حالة المثنى المضاف إلى  إلى المتكلم
+            # يدين + أنا => يديَّ
+            # جمع مذكر سالم + مضاف
+            # مشاهدين + أنا => مشاهدِيَّ
+            if suffix_voc.endswith(ar.YEH+ar.SUKUN) or suffix_voc.endswith(ar.YEH):
+                encl_vo_no_inflect_mark =  ar.SHADDA
+                enclitic_voc = ar.SHADDA+ ar.FATHA
+            # حالة الصناعي المضاف إلى المتكلم
+            # جزائريّ +أنا
+            # جزائريّ
+            
+            if (suffix_voc.endswith(ar.YEH+ar.SHADDA+ ar.FATHA) 
+            or suffix_voc.endswith(ar.YEH+ar.SHADDA+ ar.KASRA)
+            or suffix_voc.endswith(ar.YEH+ar.SHADDA+ ar.DAMMA)):
+                encl_vo_no_inflect_mark =  u""
+                enclitic_voc = u""
+            
         return enclitic_voc, encl_vo_no_inflect_mark
 
     @staticmethod
@@ -514,7 +556,7 @@ class noun_affixer(basic_affixer.basic_affixer):
     def get_form(self,word, proc, pref="", suff="", enc=""):
         """ generate noun form """
         newword = ""
-        #~ proc = araby.strip_tashkeel(proc)
+        proc = ar.strip_tashkeel(proc)
         if self.is_valid_clitics(proc, enc):
             if self.check_clitic_affix(proc, enc, suff):
                 #~ print(arepr(element))

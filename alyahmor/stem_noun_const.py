@@ -20,7 +20,7 @@ COMP_MAX_SUFFIX = 6
 COMP_MIN_STEM = 2
 COMP_JOKER = u"*"
 COMP_PREFIX_LIST_TAGS = {
-    "": {
+    u"": {
         'tags': (u"", ),
         "vocalized": (u"", )
     },
@@ -378,7 +378,7 @@ COMP_PREFIX_LIST_TAGS = {
 }
 COMP_PREFIX_LIST = COMP_PREFIX_LIST_TAGS.keys()
 COMP_SUFFIX_LIST_TAGS = {
-    "": {
+    u"": {
         'tags': (u"", ),
         "vocalized": (u"", )
     },

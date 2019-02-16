@@ -34,9 +34,11 @@ class basic_affixer:
         return  u"-".join([prefix, suffix]) in self.affixes
             
     def is_valid_clitics(self, proclitic, enclitic):
-        return True
+        #~ return True
         
-        return  u"-".join([proc, enc]) in self.clitics
+        proclitic = araby.strip_tashkeel(proclitic)
+        enclitic = araby.strip_tashkeel(enclitic)
+        return  u"-".join([proclitic, enclitic]) in self.clitics
     
     #~ @staticmethod
     #~ def check_clitic_affix(proclitic, enclitic, affix):        
@@ -86,11 +88,11 @@ class basic_affixer:
         return newword
         
 
-    def generate_affix_list(self, vocalized=True ):
+    def generate_affix_list(self, vocalized=True):
         """ generate all affixes """
         word = u"قصد"    
         # generate all possible word forms
-        forms = self.generate_forms(word)
+        forms = self.generate_forms(word, to_generate_affix=True)
         # remove diacritics
         if not vocalized :
             list_affixes = [ araby.strip_tashkeel(d[0]) for d in forms]
