@@ -19,12 +19,13 @@ Authors  | [Authors.md](https://github.com/linuxscout/alyahmor/master/AUTHORS.md
 Release  | 0.1 
 License  |[GPL](https://github.com/linuxscout/alyahmor/master/LICENSE)
 Tracker  |[linuxscout/alyahmor/Issues](https://github.com/linuxscout/alyahmor/issues)
+Accounts  |[@Twitter](https://twitter.com/linuxscout) 
 <!-- Website  |[https://pypi.python.org/pypi/alyahmor](https://pypi.python.org/pypi/alyahmor)-->
 <!--Doc  |[package Documentaion](http://pythonhosted.org/alyahmor/)
 Source  |[Github](http://github.com/linuxscout/alyahmor)-->
 <!--Download  |[sourceforge](http://alyahmor.sourceforge.net)-->
 <!-- Feedbacks  |[Comments](http://tahadz.com/alyahmor/contact) -->
-Accounts  |[@Twitter](https://twitter.com/linuxscout) 
+
 
 
 
