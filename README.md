@@ -9,7 +9,7 @@ It has many functionalities:
 - Generate all affixes combination for verbs or nouns which can be used in morphology analysis.
 
 
-##Developpers: 
+#### Developpers: 
  Taha Zerrouki: http://tahadz.com
     taha dot zerrouki at gmail dot com
 
@@ -32,15 +32,15 @@ Accounts  |[@Twitter](https://twitter.com/linuxscout)
 ## Citation
 If you would cite it in academic work, can you use this citation
 ```
-T. Zerrouki‏, Alyahmor, Arabic mophological  generator Library for python.,  https://pypi.python.org/pypi/alyahmor/
+T. Zerrouki‏, Alyahmor, Arabic mophological  generator Library for python.,  https://pypi.python.org/pypi/alyahmor/, 2019
 ```
 or in bibtex format
 ```bibtex
-@misc{zerrouki2012alyahmor,
+@misc{zerrouki2019alyahmor,
   title={alyahmor, Arabic mophological generator Library for python.},
   author={Zerrouki, Taha},
   url={https://pypi.python.org/pypi/alyahmor},
-  year={2012}
+  year={2019}
 }
 ```
 ## Applications
@@ -50,10 +50,7 @@ or in bibtex format
 * Spellchecking
 
 
-##   مزايا
- 
- 
-## Features
+## Features  مزايا
  - Arabic word Light Stemming.
 * Features:
 	- Generate word forms from given word and affixes
@@ -77,7 +74,7 @@ pip install -r requirements.txt
  - Arramooz-pysqlite : Arabic dictionary
 
 
-##أصل التسمية
+## أصل التسمية
 
 **اليَحْمُور،** وهو الحسن بن المعالي الباقلاني أبو علي النحوي الحلي  شيخ العربية في زمانه في بغداد من تلامذة أبي البقاء العكبري ت ٦٣٧هـ
 
@@ -92,7 +89,7 @@ Usage
 
 
 
-##Example 
+## Example 
 
 
 
@@ -105,7 +102,7 @@ for example
 بال+كتاب +ين => بالكتابين
 ب+أبناء+ه => بأبنائه
 
-##### Nouns
+#### Nouns
 To generate all forms of the word كتاب as noun use 
 ``` python
 >>> import alyahmor.genelex
@@ -117,7 +114,7 @@ To generate all forms of the word كتاب as noun use
 ....]
 
 ```
-##### Verbs
+#### Verbs
 To generate all forms of the word كتاب as verb, use 
 ``` python
 >>> import alyahmor.genelex
@@ -130,7 +127,7 @@ To generate all forms of the word كتاب as verb, use
 ....]
 ```
 
-##### Generate non vocalized forms
+#### Generate non vocalized forms
 To generate all forms of the word كتاب as noun without vocalization  use 
 ``` python
 >>> import alyahmor.genelex
@@ -142,7 +139,7 @@ To generate all forms of the word كتاب as noun without vocalization  use
 ....]
 
 ```
-##### Generate a dictionary of  vocalized forms indexed by unvocalized form
+#### Generate a dictionary of  vocalized forms indexed by unvocalized form
 To generate all forms of the word كتاب as noun as a dict of grouped all vocalized forms by unvocalized form  use 
 ``` python
 >>> import alyahmor.genelex
@@ -189,6 +186,7 @@ Generate Unvocalized affixes
 ### Files
 
 * file/directory    category    description 
+
 tests/samples/dataset.csv	A list of verified affixes
 
 ## Featured Posts
