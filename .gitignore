@@ -109,3 +109,6 @@ venv.bak/
 /tests/output/text.csv
 /tests/output/affix.csv
 /tests/output/text.txt
+/tests/output/dataset.csv
+/tests/output/stats.txt
+/tests/output/text.out.txt
