@@ -3,12 +3,101 @@ Arabic flexionnal morphology generator
 
 ## Description
 The Alyahmor produce a word form from (prefix, lemma, suffix).
-I has many fucntionalities:
+It has many functionalities:
 - Generate word forms from given word and affixes
 - Generate all word forms by adding verbal or nominal affixes according to word type
-- Generate all affixes combination for verbs or nouns.
+- Generate all affixes combination for verbs or nouns which can be used in morphology analysis.
 
-### Generate a vocalized word form
+
+##Developpers: 
+ Taha Zerrouki: http://tahadz.com
+    taha dot zerrouki at gmail dot com
+
+Features |   value
+---------|---------------------------------------------------------------------------------
+Authors  | [Authors.md](https://github.com/linuxscout/alyahmor/master/AUTHORS.md)
+Release  | 0.1 
+License  |[GPL](https://github.com/linuxscout/alyahmor/master/LICENSE)
+Tracker  |[linuxscout/alyahmor/Issues](https://github.com/linuxscout/alyahmor/issues)
+<!-- Website  |[https://pypi.python.org/pypi/alyahmor](https://pypi.python.org/pypi/alyahmor)-->
+<!--Doc  |[package Documentaion](http://pythonhosted.org/alyahmor/)
+Source  |[Github](http://github.com/linuxscout/alyahmor)-->
+<!--Download  |[sourceforge](http://alyahmor.sourceforge.net)-->
+<!-- Feedbacks  |[Comments](http://tahadz.com/alyahmor/contact) -->
+Accounts  |[@Twitter](https://twitter.com/linuxscout) 
+<!-- [@Sourceforge](http://sourceforge.net/projects/alyahmor/)-->
+
+
+
+## Citation
+If you would cite it in academic work, can you use this citation
+```
+T. Zerrouki‏, Alyahmor, Arabic mophological  generator Library for python.,  https://pypi.python.org/pypi/alyahmor/
+```
+or in bibtex format
+```bibtex
+@misc{zerrouki2012alyahmor,
+  title={alyahmor, Arabic mophological generator Library for python.},
+  author={Zerrouki, Taha},
+  url={https://pypi.python.org/pypi/alyahmor},
+  year={2012}
+}
+```
+## Applications
+* Text Stemming
+* Morphology analysis 
+* Text Classification and categorization
+* Spellchecking
+
+
+##   مزايا
+ 
+ 
+## Features
+ - Arabic word Light Stemming.
+* Features:
+	- Generate word forms from given word and affixes
+	- Generate all word forms by adding verbal or nominal affixes according to word type
+	- Generate all affixes combination for verbs or nouns which can be used in morphology analysis.
+
+
+ 
+
+
+## Installation
+```
+pip install alyahmor
+```    
+### Requirements
+``` 
+pip install -r requirements.txt 
+```
+ - libQutrub: Qutrub verb conjugation library: http://pypi.pyton/LibQutrub
+ - PyArabic: Arabic language tools library   : http://pypi.pyton/pyarabic
+ - Arramooz-pysqlite : Arabic dictionary
+
+
+##أصل التسمية
+
+**اليَحْمُور،** وهو الحسن بن المعالي الباقلاني أبو علي النحوي الحلي  شيخ العربية في زمانه في بغداد من تلامذة أبي البقاء العكبري ت ٦٣٧هـ
+
+وكتب بخطه كثيراً من الأدب واللغة وسائر الفنون، وكان له همةٌ عالية، وحرصٌ شديد؛ وتحصيل الفوائد مع علو سنه، وضعف بصره، وكثرة محفوظه، وصدقه، وثقته، وتواضعه، وكرم أخلاقه.
+
+وانتقل آخر عمره إلى مذهب الشافعي، **وانتهت إليه رياسة النحو.** مولده سنة ثمان وستين وخمسمائة، وتوفي سنة سبع وثلاثين وستمائة.
+[المزيد عن اليحمور ](doc/alyahmor.md)
+  
+Usage
+=====
+
+
+
+
+##Example 
+
+
+
+
+### Generate words forms
 
 It joins word with affixes with suitable correction
 for example
@@ -16,90 +105,92 @@ for example
 بال+كتاب +ين => بالكتابين
 ب+أبناء+ه => بأبنائه
 
-All this affixations are vocalized
-
-
-### Generate all word forms
-
-It joins word with affixes with suitable correction
-	for example
-	```
-			كتاب =>[(u'كتَاب', u'كتَاب', u'-كتاب--'),
-		
-		 (u'كتَابهَا', u'كتَابهَا', u'-كتاب--ها'),
-		 (u'كتَابكُمَا', u'كتَابكُمَا', u'-كتاب--كما'),
-		  (u'كتَابكَ', u'كتَابكَ', u'-كتاب--ك'),
-		 (u'كتَابهُ', u'كتَابهُ', u'-كتاب--ه'),
-		 (u'كتَابي', u'كتَابي', u'-كتاب--ي'),
-		 (u'كتَابكُنَّ', u'كتَابكُنَّ', u'-كتاب--كن'),
-		 (u'كتَابكُمْ', u'كتَابكُمْ', u'-كتاب--كم'),
-		 (u'كتَابهُنَّ', u'كتَابهُنَّ', u'-كتاب--هن'),
-		 (u'كتَابهُمْ', u'كتَابهُمْ', u'-كتاب--هم'),
-		 (u'كتَابهُمَا', u'كتَابهُمَا', u'-كتاب--هما'),
-		 (u'كتَابنَا', u'كتَابنَا', u'-كتاب--نا'),
-		.....
-		```
-	
-All this affixations are vocalized
-
-### Generate all affixes combination for verbs or nouns.
-This program can generate all valid affixes for verbs and nouns
-
-**Nouns**
+##### Nouns
+To generate all forms of the word كتاب as noun use 
 ``` python
-NOUN_AFFIX_LIST=
-[u'وك-ياتك',
- u'وبال-تين',
- u'وك-ياته',
- u'-وها',
- u'وك-ياتي',
- u'ل-ياتكما',
- u'وك-',
- u'أفك-تهن',
- u'أفك-تهم',
- u'أفب-يهم',
- u'أفب-يهن',
- ....
+>>> import alyahmor.genelex
+>>> generator = alyahmor.genelex.genelex()
+>>> word = u"كِتِاب"
+>>> noun_forms = generator.generate_forms( word, word_type="noun")
+>>>noun_forms
+[u'آلْكِتَاب', u'آلْكِتَابا', u'آلْكِتَابات', u'آلْكِتَابان', u'آلْكِتَابة', u'آلْكِتَابتان', u'آلْكِتَابتين', u'آلْكِتَابون', u'آلْكِتَابي', u'آلْكِتَابيات'
+....]
+
+```
+##### Verbs
+To generate all forms of the word كتاب as verb, use 
+``` python
+>>> import alyahmor.genelex
+>>> generator = alyahmor.genelex.genelex()
+>>> word = u"استعمل"
+>>> verb_forms = generator.generate_forms( word, word_type="verb")
+>>>verb_forms
+[u'أَأَسْتَعْمِلَ', u'أَأَسْتَعْمِلَكَ', u'أَأَسْتَعْمِلَكُمَا', u'أَأَسْتَعْمِلَكُمْ', u'أَأَسْتَعْمِلَكُنَّ', u'أَأَسْتَعْمِلَنَا', u'أَأَسْتَعْمِلَنِي', u'أَأَسْتَعْمِلَنَّ', u'أَأَسْتَعْمِلَنَّكَ', u'أَأَسْتَعْمِلَنَّكُمَا', 
+
+....]
 ```
 
-**Verbs**
+##### Generate non vocalized forms
+To generate all forms of the word كتاب as noun without vocalization  use 
+``` python
+>>> import alyahmor.genelex
+>>> generator = alyahmor.genelex.genelex()
+>>> word = u"كِتِاب"
+>>> noun_forms = generator.generate_forms( word, word_type="noun", vocalized=False)
+>>>noun_forms
+[u'آلكتاب', u'آلكتابا', u'آلكتابات', u'آلكتابان', u'آلكتابة', u'آلكتابتان', u'آلكتابتين', u'آلكتابون', u'آلكتابي', u'آلكتابيات',
+....]
+
+```
+##### Generate a dictionary of  vocalized forms indexed by unvocalized form
+To generate all forms of the word كتاب as noun as a dict of grouped all vocalized forms by unvocalized form  use 
+``` python
+>>> import alyahmor.genelex
+>>> generator = alyahmor.genelex.genelex()
+>>> word = u"كِتِاب"
+>>> noun_forms = generator.generate_forms( word, word_type="noun", indexed=True)
+>>>noun_forms
+{u'أككتابة': [u'أكَكِتَِابَةِ', u'أكَكِتَِابَةٍ'],
+ u'أوككتابة': [u'أَوَكَكِتَِابَةِ', u'أَوَكَكِتَِابَةٍ'],
+ u'وكتابياتهم': [u'وَكِتَِابياتهِمْ', u'وَكِتَِابِيَاتُهُمْ', u'وَكِتَِابِيَاتِهِمْ', u'وَكِتَِابِيَاتُهِمْ', u'وَكِتَِابياتهُمْ'],
+ u'وكتابياتهن': [u'وَكِتَِابياتهِنَّ', u'وَكِتَِابياتهُنَّ', u'وَكِتَِابِيَاتِهِنَّ', u'وَكِتَِابِيَاتُهِنَّ', u'وَكِتَِابِيَاتُهُنَّ'],
+ u'وللكتابات': [u'وَلِلْكِتَِابَاتِ', u'وَلِلْكِتَِابات'],
+ u'أبكتابتكن': [u'أَبِكِتَِابَتِكُنَّ'],
+ u'أبكتابتكم': [u'أَبِكِتَِابَتِكُمْ'],
+ u'أكتابياتهن': [u'أَكِتَِابياتهِنَّ', u'أَكِتَِابِيَاتِهِنَّ', u'أَكِتَِابياتهُنَّ', u'أَكِتَِابِيَاتُهُنَّ', u'أَكِتَِابِيَاتُهِنَّ'],
+ u'فكتاباتهم': [u'فَكِتَِاباتهِمْ', u'فَكِتَِابَاتُهُمْ', u'فَكِتَِابَاتُهِمْ', u'فَكِتَِاباتهُمْ', u'فَكِتَِابَاتِهِمْ'],
+ u'بكتابياتكن': [u'بِكِتَِابِيَاتِكُنَّ', u'بِكِتَِابياتكُنَّ'],
+....
+}
+
+```
+### Generate affixes lists
+Alyahmor generate affixes listes for verbs and nouns
 ```python
-VERB_AFFIX_LIST=
-[u'ي-ونكن',
- u'ي-ونكم',
- u'أولن-ها',
- u'فل-وهما',
- u'-وها',
- u'ولت-ن',
- u'ولي-نها',
- u'-تمه',
- u'أس-',
- u'أفت-ونني',
- u'ول-تمه',
- ....
+>>> verb_affix =generator.generate_affix_list(word_type="verb", vocalized=True)
+>>>verb_affix
+[u'أَفَسَت-يننِي', u'أَ-ونَا', u'ي-ونكَ', u'فَلَ-تاكَ', u'وَلََن-هُنَّ', u'أَت-وننَا', u'وَ-اكُنَّ', u'ن-ننَا', u'وَت-وهَا', u'أَي-نهُمَا', ....]
+
+>>> noun_affix =generator.generate_affix_list(word_type="noun", vocalized=True)
+>>> noun_affix
+[u'أكَ-ياتكَ', u'فَ-ِيَاتِكُمَا', u'أكَ-ياتكِ', u'أَوَكَ-ِينَا', u'أَلِ-ِيِّهِنَّ', u'أَفَ-َكُمَا', u'أَفَ-ِيَّتِهِمْ', u'أَفَكَ-ياتهُمْ', u'فَبِ-ِيِّكُمْ', u'وَلِ-ِيَّتِهَا', ....]
+
 ```
 
-##أصل التسمية
+Generate Unvocalized affixes 
+```python
+>>> noun_affix =generator.generate_affix_list(word_type="noun", vocalized=False)
+>>> noun_affix
+[u'-', u'-ا', u'-ات', u'-اتك', u'-اتكم', u'-اتكما', u'-اتكن', u'-اتنا', u'-اته', u'-اتها', ...]
 
-**اليَحْمُور،** وهو الحسن بن المعالي الباقلاني شيخ العربية في زمانه في بغداد من تلامذة أبي البقاء العكبري ت ٦٣٧هـ
-
-
-**ابن الباقلاني النحوي**
-
-الحسن بن معالي بن مسعود بن الحسين بن الباقلاني، أبو علي النحوي الحلي.
-قدم بغداد في صباه، وقرأ بها المذهب والكلام على الشيخ يوسف بن إسماعيل اللامغاني الحنفي، وعلى النصير عبد الله بن حسن الطوسي، وعلي المجير محمود بن المبارك. 
-
-وقرأ الحكمة على المسعودي غلام عمر بن سهلان الساوي صاحب البصائر، والأدب على أبي الحسن بن بانويه، وأبي البقاء العكبري، ومصدق الواسطي، واللغة على القاضي أبي محمد عبد الله بن أحمد بن المأمون وغيره.
-
-ولازم الاشتغال والتحصيل إلى أن برع في هذه العلوم، وصار مشاراً إليه فيها معتمداً على ما يقوله. وسمع من أبي محمد بن المأمون المذكور، ومن مسعود بن علي بن النادر، وعبد الوهاب بن هبة الله ابن أبي حبة، ومن أبي الفرج بن كليب، وآخرين.
+```
 
 
-وكتب بخطه كثيراً من الأدب واللغة وسائر الفنون، وكان له همةٌ عالية، وحرصٌ شديد؛ وتحصيل الفوائد مع علو سنه، وضعف بصره، وكثرة محفوظه، وصدقه، وثقته، وحسن طريه، وتواضعه، وكرم أخلاقه.
+### Files
 
-وانتقل آخر عمره إلى مذهب الشافعي، **وانتهت إليه رياسة النحو.** مولده سنة ثمان وستين وخمسمائة، وتوفي سنة سبع وثلاثين وستمائة.
-ومن شعره، وقد أمره بعض أصدقائه بطلاق امرأته لما كبرت: من البسيط
+* file/directory    category    description 
+tests/samples/dataset.csv	A list of verified affixes
 
-- وقائلٍ لي وقد شابت ذوائبها ... وأصبحت وهي مثل العود في النحف
-- لم لا تجذ حبال الوصل من نصفٍ ... شمطاء من غير ما حسنٍ ولا ترف
-- فقلت هيهات أن أسلو مودتها ... يوماً ولو أشرفت نفسي على التلف
-- وأن أخون عجوزاً غير خائنةٍ ... مقيمةً لي على الإتلاف والسرف
+## Featured Posts
+
+
