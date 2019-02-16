@@ -25,7 +25,6 @@ Source  |[Github](http://github.com/linuxscout/alyahmor)-->
 <!--Download  |[sourceforge](http://alyahmor.sourceforge.net)-->
 <!-- Feedbacks  |[Comments](http://tahadz.com/alyahmor/contact) -->
 Accounts  |[@Twitter](https://twitter.com/linuxscout) 
-<!-- [@Sourceforge](http://sourceforge.net/projects/alyahmor/)-->
 
 
 
