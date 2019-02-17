@@ -25,8 +25,8 @@ from __future__ import absolute_import
 import itertools
 from pyarabic.arabrepr import arepr
 import pyarabic.araby as araby
-from . import noun_affixer
-from . import verb_affixer
+import noun_affixer
+import verb_affixer
 class genelex:
     def __init__(self,):
         self.verb_vocalizer = verb_affixer.verb_affixer()        

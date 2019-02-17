@@ -14,12 +14,20 @@
 """
     Arabic noun stemmer
 """
+from __future__ import absolute_import
 import re
-
+import sys
+sys.path.append('.')
 import itertools
 import pyarabic.araby as ar
-import stem_noun_const as SNC
-import basic_affixer
+try:
+    import basic_affixer
+    import aly_stem_noun_const as SNC
+    
+except:
+    import alyahmor.basic_affixer as basic_affixer
+    import alyahmor.aly_stem_noun_const as SNC
+
 def verify_affix(word, list_seg, affix_list):
     """
     Verify possible affixes in the resulted segments according
@@ -433,13 +441,8 @@ class noun_affixer(basic_affixer.basic_affixer):
         @return: vocalized word.
         @rtype: unicode.
         """
-        # proclitic have only an uniq vocalization in arabic
-        proclitic_voc = SNC.COMP_PREFIX_LIST_TAGS[proclitic]["vocalized"][0]
-        # enclitic can be variant according to suffix
-        #print (u"vocalize: '%s' '%s'"%(enclitic, noun)).encode('utf8')
-        enclitic_voc = SNC.COMP_SUFFIX_LIST_TAGS[enclitic]["vocalized"][0]
-        enclitic_voc, encl_voc_non_inflect = self.get_enclitic_variant(
-            enclitic_voc, suffix)
+        word_tuple_list = []
+
 
         suffix_voc = suffix
         #adjust some some harakat
@@ -451,14 +454,6 @@ class noun_affixer(basic_affixer.basic_affixer):
         # convert Fathatan into one fatha, in some cases where #
         #the tanwin is not at the end: eg. محتوًى
         noun = noun.replace(ar.FATHATAN, ar.FATHA)
-
-        #add shadda if the first letter is sunny and the proclitic
-        #contains AL definition mark
-        if u'تعريف' in SNC.COMP_PREFIX_LIST_TAGS[proclitic]["tags"] and ar.is_sun(noun[0]):
-            noun = u''.join([noun[0], ar.SHADDA, noun[1:]])
-            #strip the Skun from the lam
-            if proclitic_voc.endswith(ar.SUKUN):
-                proclitic_voc = proclitic_voc[:-1]
         #completate the dictionary word vocalization
         # this allow to avoid some missed harakat before ALEF
         # in the dictionary form of word, all alefat are preceded by Fatha
@@ -487,24 +482,46 @@ class noun_affixer(basic_affixer.basic_affixer):
         suffix_voc, suffix_non_irab_mark = self.get_suffix_variants(
             noun, suffix_voc, enclitic, mankous)
 
-        # generate the non vacalized end word: the vocalized word
-        # without the I3rab Mark
-        # if the suffix is a short haraka
-        word_non_irab_mark = ''.join(
-            [proclitic_voc, noun, suffix_non_irab_mark, encl_voc_non_inflect])
 
-        #generate vocalized form
+        #~ proclitic_voc = SNC.COMP_PREFIX_LIST_TAGS[proclitic]["vocalized"][0]
+        #~ # enclitic can be variant according to suffix
+        #~ #print (u"vocalize: '%s' '%s'"%(enclitic, noun)).encode('utf8')
+        #~ enclitic_voc = SNC.COMP_SUFFIX_LIST_TAGS[enclitic]["vocalized"][0]
+        #~ enclitic_voc, encl_voc_non_inflect = self.get_enclitic_variant(
+            #~ enclitic_voc, suffix)
+        # !!!proclitic have only an uniq vocalization in arabic
+        # it's not True, the Lam has many vocalization
+        for proclitic_voc in SNC.COMP_PREFIX_LIST_TAGS[proclitic]["vocalized"]:
+            for enclitic_voc in SNC.COMP_SUFFIX_LIST_TAGS[enclitic]["vocalized"]:
+                enclitic_voc, encl_voc_non_inflect = self.get_enclitic_variant(
+                    enclitic_voc, suffix)                
+                
+            #add shadda if the first letter is sunny and the proclitic
+            #contains AL definition mark
+            if u'تعريف' in SNC.COMP_PREFIX_LIST_TAGS[proclitic]["tags"] and ar.is_sun(noun[0]):
+                noun = u''.join([noun[0], ar.SHADDA, noun[1:]])
+                #strip the Skun from the lam
+                if proclitic_voc.endswith(ar.SUKUN):
+                    proclitic_voc = proclitic_voc[:-1]
 
-        word_vocalized = ''.join([proclitic_voc, noun, suffix_voc, enclitic_voc])
-        #used for spelling purposes
-        segmented = '-'.join([proclitic_voc, noun, suffix_voc, enclitic_voc])
-        segmented = ar.strip_tashkeel(segmented)
-        #~word_vocalized = ar.ajust_vocalization(word_vocalized)3
-        for patrn, repl in SNC.AJUST_VOCAL_PATTERNS:
-            word_vocalized = word_vocalized.replace(patrn, repl)
-            word_non_irab_mark = word_non_irab_mark.replace(patrn, repl)
+            # generate the non vacalized end word: the vocalized word
+            # without the I3rab Mark
+            # if the suffix is a short haraka
+            word_non_irab_mark = ''.join(
+                [proclitic_voc, noun, suffix_non_irab_mark, encl_voc_non_inflect])
 
-        return word_vocalized, word_non_irab_mark, segmented
+            #generate vocalized form
+
+            word_vocalized = ''.join([proclitic_voc, noun, suffix_voc, enclitic_voc])
+            #used for spelling purposes
+            segmented = '-'.join([proclitic_voc, noun, suffix_voc, enclitic_voc])
+            segmented = ar.strip_tashkeel(segmented)
+            #~word_vocalized = ar.ajust_vocalization(word_vocalized)3
+            for patrn, repl in SNC.AJUST_VOCAL_PATTERNS:
+                word_vocalized = word_vocalized.replace(patrn, repl)
+                word_non_irab_mark = word_non_irab_mark.replace(patrn, repl)
+            word_tuple_list.append((word_vocalized, word_non_irab_mark, segmented))
+        return word_tuple_list
     @staticmethod
     def get_noun_variants(noun):
         """ generate noun varaintes """
@@ -555,14 +572,14 @@ class noun_affixer(basic_affixer.basic_affixer):
 
     def get_form(self,word, proc, pref="", suff="", enc=""):
         """ generate noun form """
-        newword = ""
+        newword_list = []
         proc = ar.strip_tashkeel(proc)
         if self.is_valid_clitics(proc, enc):
             if self.check_clitic_affix(proc, enc, suff):
                 #~ print(arepr(element))
-                newword = self.vocalize(word, proc, suff, enc)
+                newword_list = self.vocalize(word, proc, suff, enc)
               
-        return newword               
+        return newword_list              
         
     def generate_forms(self, word):
         """ generate all possible affixes"""
@@ -575,9 +592,9 @@ class noun_affixer(basic_affixer.basic_affixer):
             suff = element[1]
             enc = element[2]
             affix = u"-".join([proc, enc])
-            newword = self.get_form(word, proc, "",suff, enc)
-            if newword:
-                noun_forms.append(newword)            
+            newword_list = self.get_form(word, proc, "",suff, enc)
+            if newword_list:
+                noun_forms.extend(newword_list)            
         return noun_forms     
                    
     def generate_affix_list(self, vocalized=True):

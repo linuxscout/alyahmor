@@ -14,11 +14,15 @@
 """
     Arabic verb stemmer
 """
-
+from __future__ import absolute_import
 import itertools
 import pyarabic.araby as ar
-import stem_verb_const as SVC
-import basic_affixer
+try:
+    import basic_affixer
+    import aly_stem_verb_const as SVC    
+except:
+    import alyahmor.basic_affixer as basic_affixer
+    import alyahmor.aly_stem_verb_const as SVC
 import libqutrub.classverb
 def verify_affix(word, list_seg, affix_list):
     """
@@ -212,21 +216,32 @@ class verb_affixer(basic_affixer.basic_affixer):
         @return: (vocalized word, semivocalized).
         @rtype: (unicode, unicode).
         """
-        enclitic_voc = SVC.COMP_SUFFIX_LIST_TAGS[enclitic]["vocalized"][0]
-        enclitic_voc = self.get_enclitic_variant(verb, enclitic_voc)
-        proclitic_voc = SVC.COMP_PREFIX_LIST_TAGS[proclitic]["vocalized"][0]
-        #suffix_voc = suffix #CONJ_SUFFIX_LIST_TAGS[suffix]["vocalized"][0]
+        #~ print(verb.encode('utf8'))
         # لمعالجة حالة ألف التفريق
         if enclitic and verb.endswith(ar.WAW + ar.ALEF):
             verb = verb[:-1]
         if enclitic and verb.endswith(ar.ALEF_MAKSURA):
             verb = verb[:-1] + ar.ALEF
-
-        vocalized = ''.join([proclitic_voc, verb, enclitic_voc])
-        semivocalized = ''.join(
+        if enclitic and verb.endswith(ar.TEH+ar.DAMMA + ar.MEEM+ ar.SUKUN):
+            verb  = verb[:-1] + ar.DAMMA + ar.WAW
+        if enclitic and verb.endswith(ar.TEH+ar.DAMMA + ar.MEEM):
+            verb += ar.DAMMA + ar.WAW
+        word_tuple_list =[]
+        #~ enclitic_voc = SVC.COMP_SUFFIX_LIST_TAGS[enclitic]["vocalized"][0]
+        #~ enclitic_voc = self.get_enclitic_variant(verb, enclitic_voc)
+        #~ proclitic_voc = SVC.COMP_PREFIX_LIST_TAGS[proclitic]["vocalized"][0]
+        #suffix_voc = suffix #CONJ_SUFFIX_LIST_TAGS[suffix]["vocalized"][0]
+            
+        for proclitic_voc in SVC.COMP_PREFIX_LIST_TAGS[proclitic]["vocalized"]:
+            for enclitic_voc in SVC.COMP_SUFFIX_LIST_TAGS[enclitic]["vocalized"]:
+                enclitic_voc = self.get_enclitic_variant(verb, enclitic_voc)
+                vocalized = ''.join([proclitic_voc, verb, enclitic_voc])
+                semivocalized = ''.join(
             [proclitic_voc, ar.strip_lastharaka(verb), enclitic_voc])
-        return (vocalized, semivocalized)
-    def generate_forms(self, word, to_generate_affix = False):
+                word_tuple_list.append((vocalized, semivocalized))
+        return word_tuple_list
+        
+    def generate_forms(self, word):
         """ generate all possible affixes"""
         # get procletics
 
@@ -238,12 +253,12 @@ class verb_affixer(basic_affixer.basic_affixer):
             suff = element[2]
             enc = element[3]
             
-            newwordlist = self.get_form(word, proc, pref, suff, enc, to_generate_affix)
+            newwordlist = self.get_form(word, proc, pref, suff, enc)
             if newwordlist:
                 verb_forms.extend(newwordlist)
         return verb_forms
         
-    def get_form(self, word, proc, pref, suff, enc, to_generate_affix = False):
+    def get_form(self, word, proc, pref, suff, enc):
         """ generate the possible affixes"""
         # get procletics
 
@@ -265,12 +280,9 @@ class verb_affixer(basic_affixer.basic_affixer):
                         test = check_clitic_tense(proc, enc,
                                                          tense, pronoun, transitive)
                         if test:
-                            if not  to_generate_affix:
-                                conj_verb = vbc.conjugate_tense_for_pronoun(tense, pronoun)
-                            else:
-                                conj_verb = u"".join([pref, word,suff])
-                            newword = self.vocalize(conj_verb, proc,  enc)
-                            list_word.append(newword)
+                            conj_verb = vbc.conjugate_tense_for_pronoun(tense, pronoun)
+                            newword_list = self.vocalize(conj_verb, proc,  enc)
+                            list_word.extend(newword_list)
         return list_word
         
 

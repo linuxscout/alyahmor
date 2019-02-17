@@ -92,7 +92,7 @@ class basic_affixer:
         """ generate all affixes """
         word = u"قصد"    
         # generate all possible word forms
-        forms = self.generate_forms(word, to_generate_affix=True)
+        forms = self.generate_forms(word)
         # remove diacritics
         if not vocalized :
             list_affixes = [ araby.strip_tashkeel(d[0]) for d in forms]
@@ -101,7 +101,10 @@ class basic_affixer:
         # remove duplicated
         list_affixes = list(set(list_affixes))
         # remove stem and get only affixes
-        list_affixes = [ x.replace(word,'-') for x in list_affixes]
+        # those variants are used to represent verb vocalizations when conjugation
+        variants = [u'قَصَد', u'قْصَد', u"قصد"]
+        for word in variants:
+            list_affixes = [ x.replace(word,'-') for x in list_affixes]
          
         return list_affixes
     
