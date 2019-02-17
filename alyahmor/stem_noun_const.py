@@ -148,7 +148,7 @@ COMP_PREFIX_LIST_TAGS = {
     },
     u'ل': {
         'tags': (u'جر', ),
-        "vocalized": (u"لِ", )
+        "vocalized": (u"لِ", u'لَ')
     },
     u'أل': {
         'tags': (
@@ -177,7 +177,7 @@ COMP_PREFIX_LIST_TAGS = {
             u'عطف',
             u'جر',
         ),
-        "vocalized": (u"فَلِ", )
+        "vocalized": (u"فَلِ", u'فَلَ' )
     },
     u'أفل': {
         'tags': (
@@ -197,6 +197,13 @@ COMP_PREFIX_LIST_TAGS = {
             u'تعريف',
         ),
         "vocalized": (u"أَالْ", )
+    },
+    u'آل': {
+        'tags': (
+            u'استفهام',
+            u'تعريف',
+        ),
+        "vocalized": (u"آل", )
     },
     u'وال': {
         'tags': (
@@ -400,11 +407,15 @@ COMP_SUFFIX_LIST_TAGS = {
     },
     u'كم': {
         'tags': (u"مضاف", ),
-        "vocalized": (u"كُمْ", ),
+        "vocalized": (u"كُمْ", u"كُمُ"),
     },
     u"كُمْ": {
         'tags': (u"مضاف", ),
         "vocalized": (u"كُمْ", ),
+    },
+    u"كُمُ": {
+        'tags': (u"مضاف", ),
+        "vocalized": (u"كُمُ", ),
     },
     u'كن': {
         'tags': (u"مضاف", ),
@@ -440,7 +451,7 @@ COMP_SUFFIX_LIST_TAGS = {
     },
     u'هما': {
         'tags': (u"مضاف", ),
-        "vocalized": (u"هُمَا", ),
+        "vocalized": (u"هُمَا", u"هِمَا" ),
     },
     # the  second variant is ajusted in vocalized fucntion
     u"هُمَا": {
@@ -456,11 +467,15 @@ COMP_SUFFIX_LIST_TAGS = {
     #u"هِمَا":{'tags':(u"مضاف", u"مجرور", ), "vocalized":(u"هِمَا", ), },
     u'هم': {
         'tags': (u"مضاف", ),
-        "vocalized": (u"هُمْ", ),
+        "vocalized": (u"هُمْ", u"هُمُ"),
     },
     u"هُمْ": {
         'tags': (u"مضاف", ),
         "vocalized": (u"هُمْ", ),
+    },
+    u"هُمُ": {
+        'tags': (u"مضاف", ),
+        "vocalized": (u"هُمُ", ),
     },
     # the  second variant is ajusted in vocalized fucntion
     u"هِمْ": {
@@ -486,7 +501,7 @@ COMP_SUFFIX_LIST_TAGS = {
     #u"هِنَّ":{'tags':(u"مضاف", u"مجرور", ), "vocalized":(u"هِنَّ", ), },
     u'ه': {
         'tags': (u"مضاف", ),
-        "vocalized": (u"هُ", ),
+        "vocalized": (u"هُ", u"هِ"),
     },
     u"هُ": {
         'tags': (u"مضاف", ),
