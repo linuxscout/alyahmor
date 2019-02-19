@@ -634,10 +634,16 @@ COMP_PREFIX_LIST_TAGS = {
     },
     u'لل': {
         'tags': (
-            u'جر',
             u'تعريف',
         ),
-        "vocalized": (u"لِلْ", )
+        "vocalized": (u"لِلْ", u'لَلْ')
+    },
+    u'لَلْ': {
+        'tags': (
+        
+            u'تعريف',
+        ),
+        "vocalized": (u'لَلْ')
     },
     u"لِلْ": {
         'tags': (
@@ -722,6 +728,22 @@ COMP_PREFIX_LIST_TAGS = {
         ),
         "vocalized": (u"أَفَلِلْ", )
     },
+    u'ولل': {
+        'tags': (
+            u'عطف',
+            u'جر',
+            u'تعريف',
+        ),
+        "vocalized": (u"وَلِلْ", )
+    },    
+    u"وَلِلْ": {
+        'tags': (
+            u'عطف',
+            u'جر',
+            u'تعريف',
+        ),
+        "vocalized": (u"وَلِلْ", )
+    },    
 }
 COMP_PREFIX_LIST = COMP_PREFIX_LIST_TAGS.keys()
 COMP_SUFFIX_LIST_TAGS = {
@@ -1310,14 +1332,11 @@ CONJ_SUFFIX_LIST_TAGS = {
         'tags': (u'مؤنث', u'منصوب', u'متحرك', u"تنوين", u'منسوب'),
         'vocalized': (u"ِيَّةً", )
     },  #TEH_MARBUTA,
-    u"ا": {
-        'tags': (
-            u'مثنى',
-            u'مرفوع',
-        ),
-        'vocalized': (u'َا', u'ًا')
+    ar.ALEF: {
+        'tags': (),
+        'vocalized': (ar.FATHA+ar.ALEF, ar.FATHATAN+ar.ALEF)
     },  #ALEF,
-    u"َا": {
+    ar.FATHA+ar.ALEF: {
         'tags': (
             u'مثنى',
             u'إضافة',
@@ -1327,7 +1346,7 @@ CONJ_SUFFIX_LIST_TAGS = {
         'vocalized': (u'َا', )
     },  #ALEF,
     #~ u"ًا":{'tags':(u'تنوين', u'منصوب', u'متحرك', ), 'vocalized':(u'ًا', )}, #ALEF,
-    u"ًا": {
+    ar.FATHATAN+ar.ALEF: {
         'tags': (
             u'تنوين',
             u'منصوب',
