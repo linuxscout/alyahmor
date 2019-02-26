@@ -64,7 +64,30 @@ class genelex:
         else:
             return self.get_vocalized_forms_dict(forms)
             
+    def separate(self, affix_list):
+        """ return prefixes and suffixes from an affix list"""
+        prefixes = []
+        suffixes = []
+        for affix in affix_list:
+            affs = affix.split('-')
+            if len(affs) >= 2:
+                pref = affs[0]
+                suff = affs[1]
+            prefixes.append(pref)
+            suffixes.append(suff)
+        # remove duplicated
+        prefixes = list(set(prefixes))
+        prefixes.sort()
+        suffixes = list(set(suffixes))
+        suffixes.sort()
+        return prefixes, suffixes
+        
     def generate_affix_list(self, word_type="noun", vocalized=True, indexed= False):
+        """
+        generate affix list for a word type, it can be vocalized or not,
+        and can be indexed by unvocalized affixes,
+        or get it separated as prefixes and suffixes
+        """
         wtype= word_type
         if wtype=="noun":
             affix_list=  self.generate_noun_affix_list()
@@ -72,6 +95,8 @@ class genelex:
             affix_list=  self.generate_verb_affix_list()            
         else:
             affix_list=  self.generate_noun_affix_list()            
+
+
         if not indexed:
             if vocalized:
                 return affix_list
@@ -79,7 +104,12 @@ class genelex:
                 return self.get_unvocalized_affix_list(affix_list)
         else:
             return self.get_vocalized_affixes_dict(affix_list)
-            
+    def generate_prefix_suffix_list(self, word_type="noun", vocalized=True, indexed= False):
+        affix_list = self.generate_affix_list(word_type, vocalized, indexed)
+        # we want here prefixes and suffixes separatly
+        return self.separate(affix_list)
+        
+        
     def generate_noun_forms(self, word):
         """ generate all possible affixes"""
         # get procletics
