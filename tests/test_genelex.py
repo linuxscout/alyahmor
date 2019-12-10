@@ -21,15 +21,14 @@ def grabargs():
     
     parser.add_argument("-o", dest="outfile", nargs='?', 
     help="Output file to convert", metavar="OUT_FILE")
-    
+    parser.add_argument("-c", dest="command", nargs='?', 
+    help="Command to run (test, test2, affix, generate_dataset, eval)", metavar="COMMAND")
     parser.add_argument("--all", type=bool, nargs='?',
                         const=True, 
                         help="")
     args = parser.parse_args()
     return args
     
-#~ sys.path.append('../qalsadi')
-
 import pandas as pd
 
 class abstracttester:
@@ -172,7 +171,8 @@ def main(args):
     args = grabargs()
     filename = args.filename
     outfile = args.outfile
-    #~ command = args.command
+    command = args.command
+    if not command: command="test"
     try:
         myfile=open(filename)
     except:
@@ -181,7 +181,7 @@ def main(args):
     lines = myfile.readlines()
     debug=True;
     limit=500
-    command = "affix"
+    #~ command = "affix"
     tester = abstracttester()
     tester.run(command, lines, limit)
             
