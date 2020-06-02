@@ -132,6 +132,10 @@ COMP_SUFFIX_LIST_TAGS = {
         'tags': (u"مضاف", ),
         "vocalized": (u"ي", ),
     },
+    u'ِي': {
+        'tags': (u"مضاف", ),
+        "vocalized": (u"ِي", ),
+    },
     u'ك': {
         'tags': (u"مضاف", ),
         "vocalized": (u"كَ", u"كِ"),
@@ -710,7 +714,14 @@ CONJ_SUFFIX_LIST_TAGS = {
         'vocalized': (u"ِيَّةً", )
     },  #TEH_MARBUTA,
     ar.ALEF: {
-        'tags': (),
+        'tags': (            u'مثنى',
+            u'إضافة',
+            u'مرفوع',
+            u'تنوين',
+            u'تنوين الألف',
+            u'منصوب',
+            u'متحرك',            
+             ),
         'vocalized': (ar.FATHA+ar.ALEF, ar.FATHATAN+ar.ALEF)
     },  #ALEF,
     ar.FATHA+ar.ALEF: {
@@ -980,7 +991,7 @@ u'بال':"mj",
 #~ u"لل":"nj",
 }
 COMP_SUFFIX_LIST_MODEL=[
-"", 
+"",
 u'ي', 
-u"كَ", 
+u"كَ",
 ]; 
