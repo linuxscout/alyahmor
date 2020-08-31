@@ -220,6 +220,9 @@ class verb_affixer(basic_affixer.basic_affixer):
         # لمعالجة حالة ألف التفريق
         if enclitic and verb.endswith(ar.WAW + ar.ALEF):
             verb = verb[:-1]
+        # حالة مشَوْا
+        if enclitic and verb.endswith(ar.WAW + ar.SUKUN + ar.ALEF):
+            verb = verb[:-1]
         if enclitic and verb.endswith(ar.ALEF_MAKSURA):
             verb = verb[:-1] + ar.ALEF
         if enclitic and verb.endswith(ar.TEH+ar.DAMMA + ar.MEEM+ ar.SUKUN):
@@ -232,8 +235,8 @@ class verb_affixer(basic_affixer.basic_affixer):
         #~ proclitic_voc = SVC.COMP_PREFIX_LIST_TAGS[proclitic]["vocalized"][0]
         #suffix_voc = suffix #CONJ_SUFFIX_LIST_TAGS[suffix]["vocalized"][0]
             
-        for proclitic_voc in SVC.COMP_PREFIX_LIST_TAGS[proclitic]["vocalized"]:
-            for enclitic_voc in SVC.COMP_SUFFIX_LIST_TAGS[enclitic]["vocalized"]:
+        for proclitic_voc in SVC.COMP_PREFIX_LIST_TAGS.get(proclitic, {}).get("vocalized", ''):
+            for enclitic_voc in SVC.COMP_SUFFIX_LIST_TAGS.get(enclitic, {}).get("vocalized", ''):
                 enclitic_voc = self.get_enclitic_variant(verb, enclitic_voc)
                 vocalized = ''.join([proclitic_voc, verb, enclitic_voc])
                 semivocalized = ''.join(
