@@ -28,7 +28,7 @@ install:
 install3:
 	sudo python3 setup.py install
 sdist:
-	sudo python setup.py sdist
+	sudo python3 setup.py sdist
 upload:
 	echo "use twine upload dist/alyahmor-0.1-py2-none-any.whl"
 
