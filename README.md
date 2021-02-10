@@ -182,6 +182,20 @@ Generate Unvocalized affixes
 
 ```
 
+### Generate word forms by affixes
+Alyahmor generate word forms for given affixes
+```python
+>>> import alyahmor.genelex
+>>> generator = alyahmor.genelex.genelex()
+>>> word = u"كِتِاب"
+>>> generator.generate_by_affixes( word, word_type="noun", affixes = [u"بال", u"", u"ين", u""])
+['بِالْكِتَِابين']
+>>> generator.generate_by_affixes( word, word_type="noun", affixes = [u"وك", u"", u"ِ", u""])
+['وَكَكِتَِابِ']
+>>> generator.generate_by_affixes( word, word_type="noun", affixes = [u"و", u"", u"", u""])
+['وَكِتَِاب']
+ 
+```
 
 ### Files
 
