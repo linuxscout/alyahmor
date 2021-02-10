@@ -25,13 +25,78 @@ from __future__ import absolute_import
 import itertools
 from pyarabic.arabrepr import arepr
 import pyarabic.araby as araby
-import noun_affixer
-import verb_affixer
+try:
+    from . import noun_affixer
+    from . import verb_affixer
+except:
+    import noun_affixer
+    import verb_affixer    
 class genelex:
+    
     def __init__(self,):
         self.verb_vocalizer = verb_affixer.verb_affixer()        
         self.noun_vocalizer = noun_affixer.noun_affixer()        
         pass
+    def generate_by_affixes(self, word, word_type="noun", affixes =[], vocalized=True,):
+        """
+        Generate forms fo a given word with specified affixes
+        
+        @param word: the input word
+        @type word: unicode
+        @param type: (noun, verb, stop word): the default is "noun"
+        @type type: unicode
+        @param affixes: if the result must be vocalized or not, default is True
+        @type affixes: boolean
+        @param vocalized: if the result must be vocalized or not, default is True
+        @type vocalized: boolean
+        @return : all vocalized forms of input word
+        @rtype:  tuple list, list or dict 
+        """
+        wtype = word_type
+        if wtype=="noun":
+            forms = self.noun_vocalizer.generate_by_affixes(word, affixes)        
+        elif wtype=="verb":
+            forms = self.verb_vocalizer.generate_by_affixes(word, affixes)        
+
+        else:
+            forms = self.noun_vocalizer.generate_by_affixes(word, affixes) 
+        if vocalized:
+            return self.get_vocalized_forms(forms)
+        else:
+            return self.get_unvocalized_forms(forms)
+
+    def generate_forms(self, word, word_type="noun", vocalized=True, indexed=False, affixes =[]):
+        """
+        Generate forms fo a given word
+        
+        @param word: the input word
+        @type word: unicode
+        @param type: (noun, verb, stop word): the default is "noun"
+        @type type: unicode
+        @param vocalized: if the result must be vocalized or not, default is True
+        @type vocalized: boolean
+        @param indexed: the forms diplayed as dictionary with unvocalized forms as keys, and for 
+        each key, we give all possible vocalization
+        @type indexed: boolean, default False
+        @return : all vocalized forms of input word
+        @rtype:  tuple list, list or dict 
+        """
+        wtype = word_type
+        if wtype=="noun":
+            forms = self.generate_noun_forms(word)        
+        elif wtype=="verb":
+            forms = self.generate_verb_forms(word)            
+
+        else:
+            forms = self.generate_noun_forms(word)
+        if not indexed:
+            if vocalized:
+                return self.get_vocalized_forms(forms)
+            else:
+                return self.get_unvocalized_forms(forms)
+        else:
+            return self.get_vocalized_forms_dict(forms)
+
     def generate_forms(self, word, word_type="noun", vocalized=True, indexed=False):
         """
         Generate forms fo a given word

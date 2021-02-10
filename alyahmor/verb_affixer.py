@@ -260,7 +260,22 @@ class verb_affixer(basic_affixer.basic_affixer):
             if newwordlist:
                 verb_forms.extend(newwordlist)
         return verb_forms
-        
+
+    def generate_by_affixes(self, word, affixes = []):
+        """ generate all possible word forms by given affixes"""
+        # get procletics
+        verb_forms = []
+        #~ word = u"قَصْدٌ"
+        proc = affixes[0]
+        pref = affixes[1]
+        suff = affixes[2]
+        enc = affixes[3]
+        # test if affixes are in affixes list
+        if (proc not in self.procletics or pref not in self.prefixes or  suff not in self.suffixes or enc not in self.enclitics):
+            return []
+        verb_forms = self.get_form(word, proc, pref,suff, enc)
+        return verb_forms         
+    
     def get_form(self, word, proc, pref, suff, enc):
         """ generate the possible affixes"""
         # get procletics

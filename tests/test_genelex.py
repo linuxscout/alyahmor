@@ -35,10 +35,17 @@ class abstracttester:
     def __init__(self, ):
         pass
     @staticmethod
+    def test_generate_one(tuple_list):
+        generator = alyahmor_genelex.genelex()
+        for word, wtype, affixes in tuple_list:
+            affixes = affixes.split("-")
+            list_forms = generator.generate_by_affixes(word, word_type=wtype, affixes=affixes)
+            print(arepr(list_forms).replace('),', '),\n').replace('],', '],\n'))
+    @staticmethod
     def test2(tuple_list):
         generator = alyahmor_genelex.genelex()
         for word, wtype in tuple_list:
-            list_forms =generator.generate_forms(word, word_type=wtype)
+            list_forms = generator.generate_forms(word, word_type=wtype)
             print(arepr(list_forms).replace('),', '),\n').replace('],', '],\n'))
             
     @staticmethod
@@ -94,8 +101,8 @@ class abstracttester:
         dataframe = None
         df = pd.read_csv(filename, encoding="utf8", delimiter="\t");
         return df
-    @staticmethod        
-    def metric_test(affix, wtype, value, noun_affix, verb_affix):
+    # ~ @staticmethod        
+    def metric_test(self, affix, wtype, value, noun_affix, verb_affix):
         """  Calculate TP, TN, FP, FN """
         # how to examin metrics
         # TP : calculted   is in _orginal
@@ -118,16 +125,20 @@ class abstracttester:
 
         else:
             "NON"
-    @staticmethod
-    def eval_datatest(dataset):
+    # ~ @staticmethod
+    def eval_datatest(self, dataset):
         """
-        test all
+        Dataset Evalauation,
+        Test if generated affixes are verbals or nominals
         """
         df = dataset
+        # build a generator
         generator = alyahmor_genelex.genelex()
+        # generate all affixes (verbs and nouns)
         verb_affix =generator.generate_affix_list(word_type="verb", vocalized=True)
         noun_affix =generator.generate_affix_list(word_type="noun", vocalized=True)
-        df['metric'] = df.apply(lambda row: metric_test(row["affix"],row["type"], row["value"], noun_affix, verb_affix), axis=1)
+        
+        df['metric'] = df.apply(lambda row: self.metric_test(row["affix"],row["type"], row["value"], noun_affix, verb_affix), axis=1)
         TP = df[df.metric == "TP"]['affix'].count()
         TN = df[df.metric == "TN"]['affix'].count()
         FP = df[df.metric == "FP"]['affix'].count()
@@ -147,16 +158,23 @@ class abstracttester:
 
         return df        
     
-    def run(self, command, lines, limit):
+    def run(self, command, lines, limit, outfile=""):
         """ run a command to test"""
         if command =="test":
-            tuple_list = [l.decode('utf8').strip().split('\t') for l in lines]
+            # ~ tuple_list = [l.decode('utf8').strip().split('\t') for l in lines]
+            tuple_list = [l.strip().split('\t') for l in lines]
             self.test(tuple_list)
         if command =="test2":
-            tuple_list = [l.decode('utf8').strip().split('\t') for l in lines]
+            tuple_list = [l.strip().split('\t') for l in lines]
+            # ~ tuple_list = [l.decode('utf8').strip().split('\t') for l in lines]
             self.test2(tuple_list)
         elif command =="affix":
             self.test_affix()
+        elif command =="gen_one":
+            tuple_list = [l.strip().split('\t') for l in lines]
+            # ~ tuple_list = [l.decode('utf8').strip().split('\t') for l in lines]
+            # ~ self.test2(tuple_list)             
+            self.test_generate_one(tuple_list)
         elif command == "generate_dataset":
             self.generate_dataset_affix()
         elif command == "eval":
@@ -183,7 +201,7 @@ def main(args):
     limit=500
     #~ command = "affix"
     tester = abstracttester()
-    tester.run(command, lines, limit)
+    tester.run(command, lines, limit, outfile)
             
 
 if __name__ == '__main__':

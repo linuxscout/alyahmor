@@ -140,13 +140,13 @@ def check_clitic_affix(proclitic_nm, enclitic, suffix):
         #~ return self.cache_affixes_verification[affix]
 
     # get proclitics and enclitics tags
-    proclitic_tags = SNC.COMP_PREFIX_LIST_TAGS[proclitic_nm]['tags']
-    enclitic_tags = SNC.COMP_SUFFIX_LIST_TAGS[enclitic]['tags']
+    proclitic_tags = SNC.COMP_PREFIX_LIST_TAGS.get(proclitic_nm, {}).get('tags',())
+    enclitic_tags = SNC.COMP_SUFFIX_LIST_TAGS.get(enclitic, {}).get('tags',())
     # in nouns there is no prefix
-    suffix_tags = SNC.CONJ_SUFFIX_LIST_TAGS[suffix]['tags']
+    suffix_tags = SNC.CONJ_SUFFIX_LIST_TAGS.get(suffix, {}).get('tags',())
     # in some cases the suffixes have more cases
     # add this cases to suffix tags
-    suffix_tags += SNC.CONJ_SUFFIX_LIST_TAGS[suffix].get("cases", ())
+    suffix_tags += SNC.CONJ_SUFFIX_LIST_TAGS.get(suffix, {}).get("cases", ())
     # المقيمو الصلاة
     # المقيمي الصلاة
    
@@ -491,8 +491,8 @@ class noun_affixer(basic_affixer.basic_affixer):
             #~ enclitic_voc, suffix)
         # !!!proclitic have only an uniq vocalization in arabic
         # it's not True, the Lam has many vocalization
-        for proclitic_voc in SNC.COMP_PREFIX_LIST_TAGS[proclitic]["vocalized"]:
-            for enclitic_voc in SNC.COMP_SUFFIX_LIST_TAGS[enclitic]["vocalized"]:
+        for proclitic_voc in SNC.COMP_PREFIX_LIST_TAGS.get(proclitic,{}).get("vocalized", proclitic):
+            for enclitic_voc in SNC.COMP_SUFFIX_LIST_TAGS.get(enclitic,{}).get("vocalized", enclitic): #[enclitic]["vocalized"]:
                 enclitic_voc, encl_voc_non_inflect = self.get_enclitic_variant(
                     enclitic_voc, suffix)                
                 
@@ -595,6 +595,25 @@ class noun_affixer(basic_affixer.basic_affixer):
             newword_list = self.get_form(word, proc, "",suff, enc)
             if newword_list:
                 noun_forms.extend(newword_list)            
+        return noun_forms     
+
+    def generate_by_affixes(self, word, affixes = []):
+        """ generate all possible word forms by given affixes"""
+        # get procletics
+        noun_forms = []
+        #~ word = u"قَصْدٌ"
+        proc = affixes[0]
+        # ~ pref = affixes[1]
+        suff = affixes[2]
+        enc = affixes[3]
+        # test if affixes are in affixes list
+        # ~ print(proc not in self.procletics,suff not in self.suffixes , enc not in self.enclitics)
+        # ~ print(proc, suff, enc)
+        
+        if (proc not in self.procletics or suff not in self.suffixes or enc not in self.enclitics):
+            return [("Zerrouki","taha")]
+        noun_forms = self.get_form(word, proc, "",suff, enc)
+        # ~ print(noun_forms)
         return noun_forms     
                    
     def generate_affix_list(self, vocalized=True):
