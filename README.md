@@ -58,13 +58,13 @@ or in bibtex format
 	- Generate all affixes combination for verbs or nouns which can be used in morphology analysis.
 
 
- 
+
 
 
 ## Installation
 ```
 pip install alyahmor
-```    
+```
 ### Requirements
 ``` 
 pip install -r requirements.txt 
@@ -82,7 +82,7 @@ pip install -r requirements.txt
 
 وانتقل آخر عمره إلى مذهب الشافعي، **وانتهت إليه رياسة النحو.** مولده سنة ثمان وستين وخمسمائة، وتوفي سنة سبع وثلاثين وستمائة.
 [المزيد عن اليحمور ](doc/alyahmor.md)
-  
+
 Usage
 =====
 
@@ -184,6 +184,15 @@ Generate Unvocalized affixes
 
 ### Generate word forms by affixes
 Alyahmor generate word forms for given affixes
+
+
+
+*  the affix parameter is a list which contains  four elements as
+  * procletic
+  * prefix
+  * suffix
+  * enclitic
+
 ```python
 >>> import alyahmor.genelex
 >>> generator = alyahmor.genelex.genelex()
@@ -204,5 +213,4 @@ Alyahmor generate word forms for given affixes
 tests/samples/dataset.csv	A list of verified affixes
 
 ## Featured Posts
-
 
