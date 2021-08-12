@@ -35,9 +35,11 @@ upload:
 doc:
 	epydoc -v --config epydoc.conf
 test:
-	cd tests;python test_genelex.py -f samples/text.txt -o output/text.csv > output/text.out.txt
+	cd tests;python3 test_genelex.py -f samples/text.txt -o output/text.csv > output/text.out.txt
+eval:
+	cd tests;python3 test_genelex.py -c eval -f samples/text.txt -o output/text.csv > output/text.out.txt
 testqrn:
-	cd tests;python test_genelex.py -f samples/text.txt -o output/text.csv > output/text.out.txt
+	cd tests;python3 test_genelex.py -f samples/text.txt -o output/text.csv > output/text.out.txt
 testaffix:
-	cd tests;python test_print_affixes.py > output/affixes.csv
+	cd tests;python3 test_print_affixes.py > output/affixes.text
 

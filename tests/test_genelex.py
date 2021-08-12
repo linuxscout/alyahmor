@@ -4,7 +4,8 @@ from __future__ import absolute_import
 
 import argparse
 import sys
-#~ sys.path.append('..')
+sys.path.append('..')
+import pprint
 sys.path.append('../alyahmor')
 import genelex as alyahmor_genelex
 
@@ -40,13 +41,13 @@ class abstracttester:
         for word, wtype, affixes in tuple_list:
             affixes = affixes.split("-")
             list_forms = generator.generate_by_affixes(word, word_type=wtype, affixes=affixes)
-            print(arepr(list_forms).replace('),', '),\n').replace('],', '],\n'))
+            pprint.pprint(list_forms)
     @staticmethod
     def test2(tuple_list):
         generator = alyahmor_genelex.genelex()
         for word, wtype in tuple_list:
             list_forms = generator.generate_forms(word, word_type=wtype)
-            print(arepr(list_forms).replace('),', '),\n').replace('],', '],\n'))
+            pprint.pprint(list_forms)
             
     @staticmethod
     def test(tuple_list):
@@ -55,24 +56,24 @@ class abstracttester:
         for word, wtype in tuple_list:
             print('************%s*****'%wtype)
             list_forms =generator.generate_forms(word, word_type=wtype)
-            print(arepr(list_forms).replace('),', '),\n').replace('],', '],\n'))
+            pprint.pprint(list_forms)
             list_forms =generator.generate_forms(word, word_type=wtype, vocalized = False)
-            print(arepr(list_forms).replace('),', '),\n').replace('],', '],\n'))
+            pprint.pprint(list_forms)
             list_forms =generator.generate_forms(word, word_type=wtype, indexed=True)
-            print(arepr(list_forms).replace('),', '),\n').replace('],', '],\n'))
+            pprint.pprint(list_forms)
             list_forms =generator.generate_affix_list(word_type=wtype, indexed=True)
-            print(arepr(list_forms).replace('),', '),\n').replace('],', '],\n'))
+            pprint.pprint(list_forms)
     @staticmethod
     def test_affix():
         generator = alyahmor_genelex.genelex()
         word = u"قصد"
         wtype="verb"
         list_forms =generator.generate_affix_list(word_type=wtype, indexed=True)
-        print(arepr(list_forms).replace('),', '),\n').replace('],', '],\n'))
+        print(list_forms)
         wtype="noun"
         print('********* Noun ************')
         list_forms =generator.generate_affix_list(word_type=wtype, indexed= True)
-        print(arepr(list_forms).replace('),', '),\n').replace('],', '],\n'))
+        print(list_forms)
     @staticmethod        
     def generate_dataset_affix():
         generator = alyahmor_genelex.genelex()

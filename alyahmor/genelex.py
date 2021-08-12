@@ -23,7 +23,7 @@
 #
 from __future__ import absolute_import
 import itertools
-from pyarabic.arabrepr import arepr
+import pprint
 import pyarabic.araby as araby
 try:
     from . import noun_affixer
@@ -261,20 +261,17 @@ def main(args):
     word = u"قَصْدٌ"
     generator = genelex()
     noun_forms = generator.generate_noun_forms(word)
-    #~ print(arepr(noun_forms).replace('),', '),\n'))
-    #~ print('************verb*****')
+
     word = u"قصد"    
     verb_forms =generator.generate_verb_forms(word)
-    #~ print(arepr(verb_forms).replace('),', '),\n'))
-    #~ print(arepr(verb_forms).replace('],', '],\n'))
     
     print ('NOUN_AFFIX_LIST=')
     noun_affixes = generator.generate_noun_affix_list()
-    print(repr(noun_affixes).replace(',', ',\n'))
+    pprint.pprint(noun_affixes)
     
     print('VERB_AFFIX_LIST=')
     verb_affixes = generator.generate_verb_affix_list()
-    print(repr(verb_affixes).replace(',', ',\n'))
+    pprint.pprint(verb_affixes)
 
     return 0
 
