@@ -14,7 +14,9 @@
 """
     Arabic verb stemmer
 """
+
 from __future__ import absolute_import
+import pprint
 import itertools
 import pyarabic.araby as ar
 try:
@@ -295,13 +297,38 @@ class verb_affixer(basic_affixer.basic_affixer):
                     for pair in SVC.TABLE_AFFIX[affix]:
                         tense = pair[0]
                         pronoun = pair[1]
-                        test = check_clitic_tense(proc, enc,
+                        ok = check_clitic_tense(proc, enc,
                                                          tense, pronoun, transitive)
-                        if test:
+                        if ok:
                             conj_verb = vbc.conjugate_tense_for_pronoun(tense, pronoun)
                             newword_list = self.vocalize(conj_verb, proc,  enc)
+                        if ok and newword_list:
+                            newword_list = [list(x) for x in newword_list]
+                            for word_tuple in newword_list:
+                                word_tuple.append(self.get_tags( word, proc, suff, tense, pronoun))
                             list_word.extend(newword_list)
+
         return list_word
         
 
+    def get_tags(self, word, procletic, enclitic, tense="", pronoun="",):
+        """
+        Get affixes tags
         
+        """
+        taglist = []
+        # add procletic tags
+        proclitic_tags = SVC.COMP_PREFIX_LIST_TAGS.get(procletic, {}).get('tags',())
+        taglist.extend(proclitic_tags)
+        # add enclitic tags        
+        enclitic_tags = SVC.COMP_SUFFIX_LIST_TAGS.get(enclitic, {}).get('tags',())
+        taglist.extend(enclitic_tags)
+        # for verb, prefix and suffix geives tense and pronoun         
+      
+        taglist.append(tense)
+        taglist.append(pronoun)
+
+        # ~ return "tags"
+        # remove empy tags
+        taglist = [t for t in taglist if t]  
+        return ":".join(list(taglist))        

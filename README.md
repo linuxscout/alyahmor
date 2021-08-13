@@ -53,9 +53,9 @@ or in bibtex format
 ## Features  مزايا
  - Arabic word Light Stemming.
 * Features:
-	- Generate word forms from given word and affixes
-	- Generate all word forms by adding verbal or nominal affixes according to word type
-	- Generate all affixes combination for verbs or nouns which can be used in morphology analysis.
+    - Generate word forms from given word and affixes
+    - Generate all word forms by adding verbal or nominal affixes according to word type
+    - Generate all affixes combination for verbs or nouns which can be used in morphology analysis.
 
 
 
@@ -161,6 +161,29 @@ To generate all forms of the word كتاب as noun as a dict of grouped all voca
 }
 
 ```
+
+### Generate detailled forms
+The detailled  form contains
+* vocalized word form, example: "ِكِتَابَاتُنَا"
+* semi-vocalized: the word without case mark (دون علامة الإعراب),  example: "ِكِتَابَاتنَا"
+* segmented form: the affix parts and the word like : procletic-prefix-word-suffix-proclitic, for example : و--كتاب-ات-نا
+* Tags : عطف:جمع مؤنث سالم:ضمير متصل
+
+``` python
+>>> import alyahmor.genelex
+>>> generator = alyahmor.genelex.genelex()
+>>> word = u"كِتِاب"
+noun_forms = generator.generate_forms( word, word_type="noun", indexed=True, details=True)
+>>> noun_forms
+  [{'vocolized': 'استعمل', 'semi-vocalized': 'استعمل', 'segmented': '-استعمل--', 'tags': '::'}, 
+  {'vocolized': 'استعملي', 'semi-vocalized': 'استعملي', 'segmented': '-استعمل--ي', 'tags': ':مضاف:'},
+  {'vocolized': 'استعملِي', 'semi-vocalized': 'استعملِي', 'segmented': '-استعمل--ي', 'tags': ':مضاف:'},
+  {'vocolized': 'استعملكِ', 'semi-vocalized': 'استعملكِ', 'segmented': '-استعمل--ك', 'tags': ':مضاف:'}, 
+  {'vocolized': 'استعملكَ', 'semi-vocalized': 'استعملكَ', 'segmented': '-استعمل--ك', 'tags': ':مضاف:'},
+   {'vocolized': 'استعملكِ', 'semi-vocalized': 'استعملكِ', 'segmented': '-استعمل--ك', 'tags': ':مضاف:'}, 
+   {'vocolized': 'استعملكُمُ', 'semi-vocalized': 'استعملكُمُ', 'segmented': '-استعمل--كم', 'tags': ':مضاف:'}, 
+   ....]
+```
 ### Generate affixes lists
 Alyahmor generate affixes listes for verbs and nouns
 ```python
@@ -210,7 +233,7 @@ Alyahmor generate word forms for given affixes
 
 * file/directory    category    description 
 
-tests/samples/dataset.csv	A list of verified affixes
+tests/samples/dataset.csv   A list of verified affixes
 
 ## Featured Posts
 

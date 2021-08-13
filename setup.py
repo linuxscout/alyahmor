@@ -7,7 +7,7 @@ def readme():
     with open('README.rst', encoding="utf8") as f:
         return f.read()
 
-setup (name='alyahmor', version='0.1.2',
+setup (name='alyahmor', version='0.1.3',
       description='Alyahmor Arabic Morphological Genrator for Python',
       long_description = readme(),      
       author='Taha Zerrouki',
@@ -19,6 +19,7 @@ setup (name='alyahmor', version='0.1.2',
       include_package_data=True,
       install_requires=[ 'libqutrub>=1.0',
                         'pyarabic>=0.6.2',
+                        "arramooz-pysqlite>=0.1",
       ],         
       package_data = {
         'alyahmor': ['doc/*.*', 'data/*.*'],

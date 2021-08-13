@@ -17,6 +17,7 @@
 from __future__ import absolute_import
 import re
 import sys
+import pprint
 sys.path.append('.')
 import itertools
 import pyarabic.araby as ar
@@ -520,6 +521,7 @@ class noun_affixer(basic_affixer.basic_affixer):
             for patrn, repl in SNC.AJUST_VOCAL_PATTERNS:
                 word_vocalized = word_vocalized.replace(patrn, repl)
                 word_non_irab_mark = word_non_irab_mark.replace(patrn, repl)
+            
             word_tuple_list.append((word_vocalized, word_non_irab_mark, segmented))
         return word_tuple_list
     @staticmethod
@@ -578,7 +580,10 @@ class noun_affixer(basic_affixer.basic_affixer):
             if self.check_clitic_affix(proc, enc, suff):
                 #~ print(arepr(element))
                 newword_list = self.vocalize(word, proc, suff, enc)
-              
+                if newword_list:
+                    newword_list = [list(x) for x in newword_list]
+                    for word_tuple in newword_list:
+                        word_tuple.append(self.get_tags( word, proc, suff, enc))
         return newword_list              
         
     def generate_forms(self, word):
@@ -591,11 +596,32 @@ class noun_affixer(basic_affixer.basic_affixer):
             proc = element[0]
             suff = element[1]
             enc = element[2]
-            affix = u"-".join([proc, enc])
+            # ~ affix = u"-".join([proc, enc])
             newword_list = self.get_form(word, proc, "",suff, enc)
             if newword_list:
                 noun_forms.extend(newword_list)            
-        return noun_forms     
+        return noun_forms
+        
+    def get_tags(self, word, procletic, suffix, enclitic):
+        """
+        Get affixes tags
+        
+        """
+        taglist = []
+        # add procletic tags
+        proclitic_tags = SNC.COMP_PREFIX_LIST_TAGS.get(procletic, {}).get('tags',())
+        taglist.extend(proclitic_tags)
+        enclitic_tags = SNC.COMP_SUFFIX_LIST_TAGS.get(enclitic, {}).get('tags',())
+        taglist.extend(enclitic_tags)        
+        # in nouns there is no prefix
+        suffix_tags = SNC.CONJ_SUFFIX_LIST_TAGS.get(suffix, {}).get('tags',())
+        taglist.extend(suffix_tags)        
+        # add suffix tags
+        # add enclitic tags
+        # ~ return "tags"
+        # remove empy tags
+        taglist = [t for t in taglist if t]        
+        return ":".join(taglist)
 
     def generate_by_affixes(self, word, affixes = []):
         """ generate all possible word forms by given affixes"""

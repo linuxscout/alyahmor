@@ -65,7 +65,7 @@ class genelex:
         else:
             return self.get_unvocalized_forms(forms)
 
-    def generate_forms(self, word, word_type="noun", vocalized=True, indexed=False, affixes =[]):
+    def generate_forms(self, word, word_type="noun", vocalized=True, indexed=False, affixes =[], details = False):
         """
         Generate forms fo a given word
         
@@ -89,6 +89,8 @@ class genelex:
 
         else:
             forms = self.generate_noun_forms(word)
+        if details:
+            return self.get_vocalized_forms_details(forms)
         if not indexed:
             if vocalized:
                 return self.get_vocalized_forms(forms)
@@ -97,37 +99,37 @@ class genelex:
         else:
             return self.get_vocalized_forms_dict(forms)
 
-    def generate_forms(self, word, word_type="noun", vocalized=True, indexed=False):
-        """
-        Generate forms fo a given word
+    # ~ def generate_forms(self, word, word_type="noun", vocalized=True, indexed=False):
+        # ~ """
+        # ~ Generate forms fo a given word
         
-        @param word: the input word
-        @type word: unicode
-        @param type: (noun, verb, stop word): the default is "noun"
-        @type type: unicode
-        @param vocalized: if the result must be vocalized or not, default is True
-        @type vocalized: boolean
-        @param indexed: the forms diplayed as dictionary with unvocalized forms as keys, and for 
-        each key, we give all possible vocalization
-        @type indexed: boolean, default False
-        @return : all vocalized forms of input word
-        @rtype:  tuple list, list or dict 
-        """
-        wtype = word_type
-        if wtype=="noun":
-            forms = self.generate_noun_forms(word)        
-        elif wtype=="verb":
-            forms = self.generate_verb_forms(word)            
+        # ~ @param word: the input word
+        # ~ @type word: unicode
+        # ~ @param type: (noun, verb, stop word): the default is "noun"
+        # ~ @type type: unicode
+        # ~ @param vocalized: if the result must be vocalized or not, default is True
+        # ~ @type vocalized: boolean
+        # ~ @param indexed: the forms diplayed as dictionary with unvocalized forms as keys, and for 
+        # ~ each key, we give all possible vocalization
+        # ~ @type indexed: boolean, default False
+        # ~ @return : all vocalized forms of input word
+        # ~ @rtype:  tuple list, list or dict 
+        # ~ """
+        # ~ wtype = word_type
+        # ~ if wtype=="noun":
+            # ~ forms = self.generate_noun_forms(word)        
+        # ~ elif wtype=="verb":
+            # ~ forms = self.generate_verb_forms(word)            
 
-        else:
-            forms = self.generate_noun_forms(word)
-        if not indexed:
-            if vocalized:
-                return self.get_vocalized_forms(forms)
-            else:
-                return self.get_unvocalized_forms(forms)
-        else:
-            return self.get_vocalized_forms_dict(forms)
+        # ~ else:
+            # ~ forms = self.generate_noun_forms(word)
+        # ~ if not indexed:
+            # ~ if vocalized:
+                # ~ return self.get_vocalized_forms(forms)
+            # ~ else:
+                # ~ return self.get_unvocalized_forms(forms)
+        # ~ else:
+            # ~ return self.get_vocalized_forms_dict(forms)
             
     def separate(self, affix_list):
         """ return prefixes and suffixes from an affix list"""
@@ -218,7 +220,7 @@ class genelex:
 
         
     def get_vocalized_forms_dict(self, forms = []):
-        """ display vocalized forms in a dict"""
+        """ display vocalized forms in a dict indexed by unovaclized form"""
         forms_dict = {}
         if forms:
             for form in forms:
@@ -231,6 +233,18 @@ class genelex:
             forms_dict[key].sort()
             forms_dict[key] = list(set(forms_dict[key]))
         return forms_dict 
+        
+    def get_vocalized_forms_details(self, forms = []):
+        """ display vocalized forms in a list of dict"""
+        forms_list = []
+        for form in forms:
+                forms_list.append({"vocolized":form[0],
+                    "semi-vocalized":form[1],
+                    "unvocalized":araby.strip_tashkeel(form[0]),
+                    "segmented":form[2],
+                    "tags":form[3],
+                    })
+        return forms_list
         
     def get_unvocalized_affix_list(self, forms=[]):
         """ display vocalized forms"""
