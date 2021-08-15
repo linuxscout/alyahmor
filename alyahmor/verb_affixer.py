@@ -26,116 +26,8 @@ except:
     import alyahmor.basic_affixer as basic_affixer
     import alyahmor.aly_stem_verb_const as SVC
 import libqutrub.classverb
-def verify_affix(word, list_seg, affix_list):
-    """
-    Verify possible affixes in the resulted segments
-    according to the given affixes list.
-    @param word: the input word.
-    @type word: unicode.
-    @param list_seg: list of word segments indexes (numbers).
-    @type list_seg: list of pairs.
-    @return: list of acceped segments.
-    @rtype: list of pairs.
-    """
-    #~ for s in list_seg:
-    #~ print "affix", '-'.join([word[:s[0]],word[s[0]:s[1]], word[s[1]:]])
-    return [s for s in list_seg
-        if '-'.join([word[:s[0]], word[s[1]:]]) in affix_list ]
 
-def check_clitic_tense(proclitic, enclitic, tense, pronoun,
-                         transitive):
-    """
-    test if the given tenses are compatible with proclitics
-    """
-    # proaffix key
-    comp_key = u":".join(
-        [proclitic, enclitic, tense, pronoun,
-         str(transitive)])
-    # إذا كان الزمن مجهولا لا يرتبط مع الفعل اللازم
-    if not transitive and tense in SVC.qutrubVerbConst.TablePassiveTense:
-        return False
-    if not proclitic and not enclitic:
-        return True
-    # The passive tenses have no enclitics
-    #ﻷزمنة المجهولة ليس لها ضمائر متصلة في محل نصب مفعول به
-    #لأنّ مفعولها يصبح نائبا عن الفاعل
 
-    if enclitic and tense in SVC.qutrubVerbConst.TablePassiveTense:
-        return False
-
-    #~ elif enclitic and think_trans and pronoun
-    # لا سابقة
-    # أو سابقة ، والزمن مسموح لها
-    # لا لاحقة
-    #أو زمن مسموح لتلك اللاحقة
-    elif ((not proclitic
-           or tense in SVC.EXTERNAL_PREFIX_TABLE.get(proclitic, ''))
-          and (not enclitic
-               or pronoun in SVC.EXTERNAL_SUFFIX_TABLE.get(enclitic, ''))):
-        return True
-
-    else:
-        return False
-
-def check_clitic_affix(proclitic, enclitic, affix):
-    """
-    Verify if proaffixes (sytaxic affixes) are compatable with affixes
-    (conjugation)
-    @param proclitic: first level prefix.
-    @type proclitic: unicode.
-    @param enclitic: first level suffix.
-    @type enclitic: unicode.
-    @param affix: second level affix.
-    @type affix: unicode.
-    @return: compatible.
-    @rtype: True/False.
-    """
-    # proaffix key
-    #~ comp_key = u":".join([proclitic, enclitic, affix])
-    #~ if comp_key in self.compatibility_cache:
-        #~ return self.compatibility_cache[comp_key]
-    if not proclitic and not enclitic:
-        return True
-    else:
-        proclitic_compatible = False
-        if not proclitic:
-            proclitic_compatible = True
-        elif proclitic in SVC.EXTERNAL_PREFIX_TABLE:
-            #~ elif SVC.EXTERNAL_PREFIX_TABLE.has_key(proclitic):
-            if affix == '-':
-                proclitic_compatible = True
-            else:
-                for item in SVC.TABLE_AFFIX.get(affix, []):
-                    #the tense item[0]
-                    if item[0] in SVC.EXTERNAL_PREFIX_TABLE.get(
-                            proclitic, ''):
-                        proclitic_compatible = True
-                        break
-                else:
-                    proclitic_compatible = False
-        if proclitic_compatible:
-            if not enclitic:
-                #~ self.compatibility_cache[comp_key] = True
-                return True
-            elif enclitic in SVC.EXTERNAL_SUFFIX_TABLE:
-                #~ elif SVC.EXTERNAL_SUFFIX_TABLE.has_key(enclitic):
-                if affix == '-':
-                    #~ self.compatibility_cache[comp_key] = True
-                    return True
-                else:
-                    for item in SVC.TABLE_AFFIX.get(affix, []):
-                        #the tense item[0]
-                        if item[1] in SVC.EXTERNAL_SUFFIX_TABLE.get(
-                                enclitic, ''):
-                            #~ return True
-                            break
-                    else:
-                        #~ self.compatibility_cache[comp_key] = False
-                        return False
-                    #~ self.compatibility_cache[comp_key] = True
-                    return True
-    #~ self.compatibility_cache[comp_key] = False
-    return False
 
 class verb_affixer(basic_affixer.basic_affixer):
     def __init__(self, ):
@@ -155,6 +47,17 @@ class verb_affixer(basic_affixer.basic_affixer):
         #~ self.prefixes = [ p for p  in self.prefixes if ar.is_vocalized(p)]
         #~ self.suffixes = [ p for p  in self.suffixes if ar.is_vocalized(p)]
         #~ self.clitics = [ p for p  in self.clitics if ar.is_vocalized(p)]
+        self.procletics_tags = SVC.COMP_PREFIX_LIST_TAGS
+        #~ # get prefixes
+        # ~ self.prefixes_tags = SVC.CONJ_PREFIX_LIST_TAGS
+        # get suffixes
+        # ~ self.suffixes_tags = SVC.CONJ_SUFFIX_LIST_TAGS
+        # get enclitics:
+        self.enclitics_tags = SVC.COMP_SUFFIX_LIST_TAGS 
+        
+        self.table_affix = SVC.TABLE_AFFIX       
+        self.external_prefix_table = SVC.EXTERNAL_PREFIX_TABLE
+        self.external_suffix_table = SVC.EXTERNAL_SUFFIX_TABLE
     @staticmethod
     def check_clitic_affix(proclitic, enclitic, affix):        
         return check_clitic_affix(proclitic, enclitic, affix)  
@@ -237,8 +140,8 @@ class verb_affixer(basic_affixer.basic_affixer):
         #~ proclitic_voc = SVC.COMP_PREFIX_LIST_TAGS[proclitic]["vocalized"][0]
         #suffix_voc = suffix #CONJ_SUFFIX_LIST_TAGS[suffix]["vocalized"][0]
             
-        for proclitic_voc in SVC.COMP_PREFIX_LIST_TAGS.get(proclitic, {}).get("vocalized", ''):
-            for enclitic_voc in SVC.COMP_SUFFIX_LIST_TAGS.get(enclitic, {}).get("vocalized", ''):
+        for proclitic_voc in self.procletics_tags.get(proclitic, {}).get("vocalized", ''):
+            for enclitic_voc in self.enclitics_tags.get(enclitic, {}).get("vocalized", ''):
                 enclitic_voc = self.get_enclitic_variant(verb, enclitic_voc)
                 vocalized = ''.join([proclitic_voc, verb, enclitic_voc])
                 semivocalized = ''.join(
@@ -293,11 +196,11 @@ class verb_affixer(basic_affixer.basic_affixer):
             affix = pref+'-'+suff
             if self.check_clitic_affix(proc, enc, affix):
                 #~ print(arepr(element))
-                if affix in SVC.TABLE_AFFIX:
-                    for pair in SVC.TABLE_AFFIX[affix]:
+                if affix in self.table_affix:
+                    for pair in self.table_affix[affix]:
                         tense = pair[0]
                         pronoun = pair[1]
-                        ok = check_clitic_tense(proc, enc,
+                        ok = self.check_clitic_tense(proc, enc,
                                                          tense, pronoun, transitive)
                         if ok:
                             conj_verb = vbc.conjugate_tense_for_pronoun(tense, pronoun)
@@ -318,10 +221,10 @@ class verb_affixer(basic_affixer.basic_affixer):
         """
         taglist = []
         # add procletic tags
-        proclitic_tags = SVC.COMP_PREFIX_LIST_TAGS.get(procletic, {}).get('tags',())
+        proclitic_tags = self.procletics_tags.get(procletic, {}).get('tags',())
         taglist.extend(proclitic_tags)
         # add enclitic tags        
-        enclitic_tags = SVC.COMP_SUFFIX_LIST_TAGS.get(enclitic, {}).get('tags',())
+        enclitic_tags = self.enclitics_tags.get(enclitic, {}).get('tags',())
         taglist.extend(enclitic_tags)
         # for verb, prefix and suffix geives tense and pronoun         
       
@@ -332,3 +235,114 @@ class verb_affixer(basic_affixer.basic_affixer):
         # remove empy tags
         taglist = [t for t in taglist if t]  
         return ":".join(list(taglist))        
+    def check_clitic_affix(self, proclitic, enclitic, affix):
+        """
+        Verify if proaffixes (sytaxic affixes) are compatable with affixes
+        (conjugation)
+        @param proclitic: first level prefix.
+        @type proclitic: unicode.
+        @param enclitic: first level suffix.
+        @type enclitic: unicode.
+        @param affix: second level affix.
+        @type affix: unicode.
+        @return: compatible.
+        @rtype: True/False.
+        """
+        # proaffix key
+        #~ comp_key = u":".join([proclitic, enclitic, affix])
+        #~ if comp_key in self.compatibility_cache:
+            #~ return self.compatibility_cache[comp_key]
+        if not proclitic and not enclitic:
+            return True
+        else:
+            proclitic_compatible = False
+            if not proclitic:
+                proclitic_compatible = True
+            elif proclitic in self.external_prefix_table:
+                if affix == '-':
+                    proclitic_compatible = True
+                else:
+                    for item in self.table_affix.get(affix, []):
+                        #the tense item[0]
+                        if item[0] in self.external_prefix_table.get(
+                                proclitic, ''):
+                            proclitic_compatible = True
+                            break
+                    else:
+                        proclitic_compatible = False
+            if proclitic_compatible:
+                if not enclitic:
+                    #~ self.compatibility_cache[comp_key] = True
+                    return True
+                elif enclitic in self.external_suffix_table:
+                    #~ elif SVC.EXTERNAL_SUFFIX_TABLE.has_key(enclitic):
+                    if affix == '-':
+                        #~ self.compatibility_cache[comp_key] = True
+                        return True
+                    else:
+                        for item in self.table_affix.get(affix, []):
+                            #the tense item[0]
+                            if item[1] in self.external_suffix_table.get(
+                                    enclitic, ''):
+                                #~ return True
+                                break
+                        else:
+                            #~ self.compatibility_cache[comp_key] = False
+                            return False
+                        #~ self.compatibility_cache[comp_key] = True
+                        return True
+        #~ self.compatibility_cache[comp_key] = False
+        return False
+    def check_clitic_tense(self, proclitic, enclitic, tense, pronoun,
+                             transitive):
+        """
+        test if the given tenses are compatible with proclitics
+        """
+        # proaffix key
+        comp_key = u":".join(
+            [proclitic, enclitic, tense, pronoun,
+             str(transitive)])
+        # إذا كان الزمن مجهولا لا يرتبط مع الفعل اللازم
+        if not transitive and tense in SVC.qutrubVerbConst.TablePassiveTense:
+            return False
+        if not proclitic and not enclitic:
+            return True
+        # The passive tenses have no enclitics
+        #ﻷزمنة المجهولة ليس لها ضمائر متصلة في محل نصب مفعول به
+        #لأنّ مفعولها يصبح نائبا عن الفاعل
+
+        if enclitic and tense in SVC.qutrubVerbConst.TablePassiveTense:
+            return False
+
+        #~ elif enclitic and think_trans and pronoun
+        # لا سابقة
+        # أو سابقة ، والزمن مسموح لها
+        # لا لاحقة
+        #أو زمن مسموح لتلك اللاحقة
+        elif ((not proclitic
+               or tense in self.external_prefix_table.get(proclitic, ''))
+              and (not enclitic
+                   or pronoun in self.external_suffix_table.get(enclitic, ''))):
+            return True
+
+        else:
+            return False
+
+    @staticmethod
+    def verify_affix(word, list_seg, affix_list):
+        """
+        Verify possible affixes in the resulted segments
+        according to the given affixes list.
+        @param word: the input word.
+        @type word: unicode.
+        @param list_seg: list of word segments indexes (numbers).
+        @type list_seg: list of pairs.
+        @return: list of acceped segments.
+        @rtype: list of pairs.
+        """
+        #~ for s in list_seg:
+        #~ print "affix", '-'.join([word[:s[0]],word[s[0]:s[1]], word[s[1]:]])
+        return [s for s in list_seg
+            if '-'.join([word[:s[0]], word[s[1]:]]) in affix_list ]
+
+            

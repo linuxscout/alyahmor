@@ -102,94 +102,7 @@ def validate_tags(noun_tuple, affix_tags, proclitic_nm, enclitic_nm,
 
     return True
 
-def check_clitic_affix(proclitic_nm, enclitic, suffix):
-    """
-    Verify if proaffixes (sytaxic affixes) are compatable
-    with affixes ( conjugation)
-    @param proclitic_nm: first level prefix.
-    @type proclitic_nm: unicode.
-    @param enclitic: first level suffix.
-    @type enclitic: unicode.
-    @param suffix: second level suffix.
-    @type suffix: unicode.
-    @return: compatible.
-    @rtype: True/False.
-    """
-    # avoid Fathatan on no ALEF Tawnwin expect on Teh marbuta and Alef followed by Hamza
-    # تجنب تنوين النصب على غير الألف ما عدا التاء المربوطة أو همزة بعد ألف
-    #~ if suffix == ar.FATHATAN and not (
-            #~ noun_tuple["unvocalized"].endswith(ar.TEH_MARBUTA)
-            #~ or noun_tuple["unvocalized"].endswith(ar.ALEF + ar.HAMZA)):
-        #~ return False
-    # avoid masculin regular plural with unallowed case
-    # تجنب جمع المذكر السالم للكلمات التي لا تقبلها
-    #~ if u'جمع مذكر سالم' in SNC.CONJ_SUFFIX_LIST_TAGS[suffix]['tags']\
-      #~ and not noun_tuple['masculin_plural']:
-        #~ return False
-                #~ # التنوين لا يتطابق مع الممنوع من الصرف
-    # print "stem_noun", noun_tuple["unvocalized"].encode('utf8'), noun_tuple['masculin_plural'],type(noun_tuple['masculin_plural']),    bool(noun_tuple['masculin_plural'])
-    #~ if u'تنوين' in SNC.CONJ_SUFFIX_LIST_TAGS[suffix]['tags'] and noun_tuple['mamnou3_sarf']:
-        #~ return False
-    #if not proclitic and not enclitic:  return True
-    #use cache for affix verification
-    #~ affix = u'-'.join([
-        #~ proclitic_nm, enclitic, suffix,
-        #~ str(bool(noun_tuple['mamnou3_sarf']))
-    #~ ])
-    #~print affix.encode("utf8")
-    #~ if affix in self.cache_affixes_verification:
-        #~ return self.cache_affixes_verification[affix]
 
-    # get proclitics and enclitics tags
-    proclitic_tags = SNC.COMP_PREFIX_LIST_TAGS.get(proclitic_nm, {}).get('tags',())
-    enclitic_tags = SNC.COMP_SUFFIX_LIST_TAGS.get(enclitic, {}).get('tags',())
-    # in nouns there is no prefix
-    suffix_tags = SNC.CONJ_SUFFIX_LIST_TAGS.get(suffix, {}).get('tags',())
-    # in some cases the suffixes have more cases
-    # add this cases to suffix tags
-    suffix_tags += SNC.CONJ_SUFFIX_LIST_TAGS.get(suffix, {}).get("cases", ())
-    # المقيمو الصلاة
-    # المقيمي الصلاة
-   
-    #~ if u"تعريف" in proclitic_tags and u"مضاف" in suffix_tags and \
-    #~ u'مضاف' not in enclitic_tags:
-        #~ return False
-
-    if u"تعريف" in proclitic_tags and u"تنوين" in suffix_tags:
-        return False
-    elif u"تعريف" in proclitic_tags and u"إضافة" in suffix_tags:
-        return  False
-        
-    #~ elif u"تعريف" in proclitic_tags and suffix == ar.YEH and u"مضاف"  in suffix_tags and \
-    #~ enclitic:
-        #~ return False         
-
-
-# الجر  في حالات الاسم المعرفة بال أو الإضافة إلى ضمير أو مضاف إليه
-# مما يعني لا يمكن تطبيقها هنا
-# بل في حالة التحليل النحوي
-    elif u"مضاف" in enclitic_tags and u"تنوين" in suffix_tags:
-         return False
-    elif u"مضاف" in enclitic_tags and u"لايضاف" in suffix_tags:
-        return  False
-    elif u"جر" in proclitic_tags and u"مجرور" not in suffix_tags:
-        return False
-    elif enclitic.startswith(ar.YEH) and suffix.endswith(ar.DAMMA):
-        return False
-
-
-#ستعمل في حالة كسر هاء الضمير في الجر
-
-#elif  bool(u"لايجر" in enclitic_tags) and  bool(u"مجرور" in \
-#suffix_tags) :
-#    self.cache_affixes_verification[affix] = False
-#elif  bool(u"مجرور" in enclitic_tags) and  not bool(u"مجرور" in \
-#suffix_tags) :
-#    self.cache_affixes_verification[affix] = False
-    else:
-        return  True
-
-    return True
 
 class noun_affixer(basic_affixer.basic_affixer):
     def __init__(self,):
@@ -210,10 +123,20 @@ class noun_affixer(basic_affixer.basic_affixer):
         # self.prefixes = [ p for p  in self.prefixes if ar.is_vocalized(p)]
         #~ self.suffixes = [ p for p  in self.suffixes if ar.is_vocalized(p)]
         #~ self.clitics = [ p for p  in self.clitics if ar.is_vocalized(p)]
-        
-    @staticmethod
-    def check_clitic_affix(proclitic, enclitic, affix):        
-        return check_clitic_affix(proclitic, enclitic, affix)             
+
+        self.procletics_tags = SNC.COMP_PREFIX_LIST_TAGS
+        #~ # get prefixes
+        self.prefixes_tags = []
+        # get suffixes
+        self.suffixes_tags = SNC.CONJ_SUFFIX_LIST_TAGS
+        # get enclitics:
+        self.enclitics_tags = SNC.COMP_SUFFIX_LIST_TAGS
+        # ~ self.affixes_tags = SNC.NOMINAL_CONJUGATION_AFFIX_TAGS
+        # ~ self.clitics_tags = SNC.COMP_NOUN_AFFIXES_TAGS
+              
+    # ~ @staticmethod
+    # ~ def check_clitic_affix(proclitic, enclitic, affix):        
+        # ~ return check_clitic_affix(proclitic, enclitic, affix)             
 
     @staticmethod
     def get_stem_variants(stem, suffix_nm):
@@ -256,8 +179,8 @@ class noun_affixer(basic_affixer.basic_affixer):
         validated_list = possible_noun_list
         return validated_list
 
-    @staticmethod
-    def get_suffix_variants(word, suffix, enclitic, mankous=False):
+
+    def get_suffix_variants(self, word, suffix, enclitic, mankous=False):
         """
         Get the suffix variant to be joined to the word.
         For example: word = مدرس, suffix = ة, enclitic = ي.
@@ -291,7 +214,7 @@ class noun_affixer(basic_affixer.basic_affixer):
         #gererate the suffix without I'rab short mark
         # here we lookup with given suffix because the new suffix is
         # changed and can be not found in table
-        if u'متحرك' in SNC.CONJ_SUFFIX_LIST_TAGS[suffix]['tags']:
+        if u'متحرك' in self.suffixes_tags[suffix]['tags']:
             suffix_non_irab_mark = ar.strip_lastharaka(newsuffix)
         else:
             suffix_non_irab_mark = newsuffix
@@ -492,14 +415,14 @@ class noun_affixer(basic_affixer.basic_affixer):
             #~ enclitic_voc, suffix)
         # !!!proclitic have only an uniq vocalization in arabic
         # it's not True, the Lam has many vocalization
-        for proclitic_voc in SNC.COMP_PREFIX_LIST_TAGS.get(proclitic,{}).get("vocalized", proclitic):
-            for enclitic_voc in SNC.COMP_SUFFIX_LIST_TAGS.get(enclitic,{}).get("vocalized", enclitic): #[enclitic]["vocalized"]:
+        for proclitic_voc in self.procletics_tags.get(proclitic,{}).get("vocalized", proclitic):
+            for enclitic_voc in self.enclitics_tags.get(enclitic,{}).get("vocalized", enclitic): #[enclitic]["vocalized"]:
                 enclitic_voc, encl_voc_non_inflect = self.get_enclitic_variant(
                     enclitic_voc, suffix)                
                 
             #add shadda if the first letter is sunny and the proclitic
             #contains AL definition mark
-            if u'تعريف' in SNC.COMP_PREFIX_LIST_TAGS[proclitic]["tags"] and ar.is_sun(noun[0]):
+            if u'تعريف' in self.procletics_tags[proclitic]["tags"] and ar.is_sun(noun[0]):
                 noun = u''.join([noun[0], ar.SHADDA, noun[1:]])
                 #strip the Skun from the lam
                 if proclitic_voc.endswith(ar.SUKUN):
@@ -609,12 +532,12 @@ class noun_affixer(basic_affixer.basic_affixer):
         """
         taglist = []
         # add procletic tags
-        proclitic_tags = SNC.COMP_PREFIX_LIST_TAGS.get(procletic, {}).get('tags',())
+        proclitic_tags = self.procletics_tags.get(procletic, {}).get('tags',())
         taglist.extend(proclitic_tags)
-        enclitic_tags = SNC.COMP_SUFFIX_LIST_TAGS.get(enclitic, {}).get('tags',())
+        enclitic_tags = self.enclitics_tags.get(enclitic, {}).get('tags',())
         taglist.extend(enclitic_tags)        
         # in nouns there is no prefix
-        suffix_tags = SNC.CONJ_SUFFIX_LIST_TAGS.get(suffix, {}).get('tags',())
+        suffix_tags = self.suffixes_tags.get(suffix, {}).get('tags',())
         taglist.extend(suffix_tags)        
         # add suffix tags
         # add enclitic tags
@@ -658,3 +581,91 @@ class noun_affixer(basic_affixer.basic_affixer):
         list_affixes = [ x.replace(word,'-') for x in list_affixes]
          
         return list_affixes 
+    def check_clitic_affix(self, proclitic_nm, enclitic, suffix):
+        """
+        Verify if proaffixes (sytaxic affixes) are compatable
+        with affixes ( conjugation)
+        @param proclitic_nm: first level prefix.
+        @type proclitic_nm: unicode.
+        @param enclitic: first level suffix.
+        @type enclitic: unicode.
+        @param suffix: second level suffix.
+        @type suffix: unicode.
+        @return: compatible.
+        @rtype: True/False.
+        """
+        # avoid Fathatan on no ALEF Tawnwin expect on Teh marbuta and Alef followed by Hamza
+        # تجنب تنوين النصب على غير الألف ما عدا التاء المربوطة أو همزة بعد ألف
+        #~ if suffix == ar.FATHATAN and not (
+                #~ noun_tuple["unvocalized"].endswith(ar.TEH_MARBUTA)
+                #~ or noun_tuple["unvocalized"].endswith(ar.ALEF + ar.HAMZA)):
+            #~ return False
+        # avoid masculin regular plural with unallowed case
+        # تجنب جمع المذكر السالم للكلمات التي لا تقبلها
+        #~ if u'جمع مذكر سالم' in SNC.CONJ_SUFFIX_LIST_TAGS[suffix]['tags']\
+          #~ and not noun_tuple['masculin_plural']:
+            #~ return False
+                    #~ # التنوين لا يتطابق مع الممنوع من الصرف
+        # print "stem_noun", noun_tuple["unvocalized"].encode('utf8'), noun_tuple['masculin_plural'],type(noun_tuple['masculin_plural']),    bool(noun_tuple['masculin_plural'])
+        #~ if u'تنوين' in SNC.CONJ_SUFFIX_LIST_TAGS[suffix]['tags'] and noun_tuple['mamnou3_sarf']:
+            #~ return False
+        #if not proclitic and not enclitic:  return True
+        #use cache for affix verification
+        #~ affix = u'-'.join([
+            #~ proclitic_nm, enclitic, suffix,
+            #~ str(bool(noun_tuple['mamnou3_sarf']))
+        #~ ])
+        #~print affix.encode("utf8")
+        #~ if affix in self.cache_affixes_verification:
+            #~ return self.cache_affixes_verification[affix]
+
+        # get proclitics and enclitics tags
+        proclitic_tags = self.procletics_tags.get(proclitic_nm, {}).get('tags',())
+        enclitic_tags = self.enclitics_tags.get(enclitic, {}).get('tags',())
+        # in nouns there is no prefix
+        suffix_tags = self.suffixes_tags.get(suffix, {}).get('tags',())
+        # in some cases the suffixes have more cases
+        # add this cases to suffix tags
+        suffix_tags += self.suffixes_tags.get(suffix, {}).get("cases", ())
+        # المقيمو الصلاة
+        # المقيمي الصلاة
+       
+        #~ if u"تعريف" in proclitic_tags and u"مضاف" in suffix_tags and \
+        #~ u'مضاف' not in enclitic_tags:
+            #~ return False
+
+        if u"تعريف" in proclitic_tags and u"تنوين" in suffix_tags:
+            return False
+        elif u"تعريف" in proclitic_tags and u"إضافة" in suffix_tags:
+            return  False
+            
+        #~ elif u"تعريف" in proclitic_tags and suffix == ar.YEH and u"مضاف"  in suffix_tags and \
+        #~ enclitic:
+            #~ return False         
+
+
+    # الجر  في حالات الاسم المعرفة بال أو الإضافة إلى ضمير أو مضاف إليه
+    # مما يعني لا يمكن تطبيقها هنا
+    # بل في حالة التحليل النحوي
+        elif u"مضاف" in enclitic_tags and u"تنوين" in suffix_tags:
+             return False
+        elif u"مضاف" in enclitic_tags and u"لايضاف" in suffix_tags:
+            return  False
+        elif u"جر" in proclitic_tags and u"مجرور" not in suffix_tags:
+            return False
+        elif enclitic.startswith(ar.YEH) and suffix.endswith(ar.DAMMA):
+            return False
+
+
+    #ستعمل في حالة كسر هاء الضمير في الجر
+
+    #elif  bool(u"لايجر" in enclitic_tags) and  bool(u"مجرور" in \
+    #suffix_tags) :
+    #    self.cache_affixes_verification[affix] = False
+    #elif  bool(u"مجرور" in enclitic_tags) and  not bool(u"مجرور" in \
+    #suffix_tags) :
+    #    self.cache_affixes_verification[affix] = False
+        else:
+            return  True
+
+        return True        
