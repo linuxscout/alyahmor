@@ -146,7 +146,8 @@ class verb_affixer(basic_affixer.basic_affixer):
                 vocalized = ''.join([proclitic_voc, verb, enclitic_voc])
                 semivocalized = ''.join(
             [proclitic_voc, ar.strip_lastharaka(verb), enclitic_voc])
-                word_tuple_list.append((vocalized, semivocalized))
+                segmented_word  = u"-".join([proclitic_voc,"", verb,"", enclitic_voc])
+                word_tuple_list.append((vocalized, semivocalized, segmented_word))
         return word_tuple_list
         
     def generate_forms(self, word):

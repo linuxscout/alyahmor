@@ -21,16 +21,14 @@
 #  MA 02110-1301, USA.
 #  
 #
-from __future__ import absolute_import
+
 import itertools
 import pprint
 import pyarabic.araby as araby
-try:
-    from . import noun_affixer
-    from . import verb_affixer
-except:
-    import noun_affixer
-    import verb_affixer    
+
+from . import noun_affixer
+from . import verb_affixer
+
 class genelex:
     
     def __init__(self,):
@@ -237,8 +235,9 @@ class genelex:
     def get_vocalized_forms_details(self, forms = []):
         """ display vocalized forms in a list of dict"""
         forms_list = []
+
         for form in forms:
-                forms_list.append({"vocolized":form[0],
+                forms_list.append({"vocalized":form[0],
                     "semi-vocalized":form[1],
                     "unvocalized":araby.strip_tashkeel(form[0]),
                     "segmented":form[2],
