@@ -7,7 +7,7 @@ def readme():
     with open('README.rst', encoding="utf8") as f:
         return f.read()
 
-setup (name='alyahmor', version='0.1.3',
+setup (name='alyahmor', version='0.1.4',
       description='Alyahmor Arabic Morphological Genrator for Python',
       long_description = readme(),      
       author='Taha Zerrouki',
