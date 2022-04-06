@@ -209,7 +209,7 @@ class verb_affixer(basic_affixer.basic_affixer):
                         if ok and newword_list:
                             newword_list = [list(x) for x in newword_list]
                             for word_tuple in newword_list:
-                                word_tuple.append(self.get_tags( word, proc, suff, tense, pronoun))
+                                word_tuple.append(self.get_tags( word, proc, enc, tense, pronoun))
                             list_word.extend(newword_list)
 
         return list_word
@@ -224,8 +224,11 @@ class verb_affixer(basic_affixer.basic_affixer):
         # add procletic tags
         proclitic_tags = self.procletics_tags.get(procletic, {}).get('tags',())
         taglist.extend(proclitic_tags)
-        # add enclitic tags        
+        # add enclitic tags
+        # enclitic_nm = ar.strip_tashkeel(enclitic)
+
         enclitic_tags = self.enclitics_tags.get(enclitic, {}).get('tags',())
+        # print("verb_affixer:", enclitic_tags, enclitic, enclitic_nm)
         taglist.extend(enclitic_tags)
         # for verb, prefix and suffix geives tense and pronoun         
       

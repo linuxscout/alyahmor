@@ -16,7 +16,7 @@ Arabic lexical analyser constants, provides feature for stemming arabic word as 
 import re
 import pyarabic.araby as ar
 import libqutrub.verb_const as qutrubVerbConst
-VERB_STAMP_PAT = re.compile(ur"[%s%s%s%s%s%s]" % (ar.ALEF, ar.YEH, ar.WAW, ar.ALEF_MAKSURA,
+VERB_STAMP_PAT = re.compile(u"[%s%s%s%s%s%s]" % (ar.ALEF, ar.YEH, ar.WAW, ar.ALEF_MAKSURA,
                          ar.HAMZA, ar.SHADDA), re.UNICODE)
 # Compound affixes
 COMP_PREFIX_LETTERS = u"أسلفو"
@@ -301,6 +301,10 @@ COMP_SUFFIX_LIST_TAGS = {
         'tags': (u"مفعول به", ),
         "vocalized": (u"هُ", ),
     },
+    # u"هُ": {
+    #     'tags': (u"مفعول به",),
+    #     "vocalized": (u"هُ",),
+    # },
     u'كم': {
         'tags': (u"مفعول به", ),
         "vocalized": (u"كُمْ",u"كُمُ" ),

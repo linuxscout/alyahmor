@@ -1,13 +1,13 @@
 ﻿#!/usr/bin/python
 # -*- coding = utf-8 -*-
-from __future__ import absolute_import
+# from __future__ import absolute_import
 
 import argparse
 import sys
 sys.path.append('..')
 import pprint
 sys.path.append('../alyahmor')
-import genelex as alyahmor_genelex
+import alyahmor.genelex as alyahmor_genelex
 
 import pyarabic.araby as araby
 from pyarabic.arabrepr import arepr
@@ -50,12 +50,20 @@ class abstracttester:
             pprint.pprint(list_forms)
             
     @staticmethod
-    def test(tuple_list):
+    def test_details(tuple_list):
         generator = alyahmor_genelex.genelex()
         
         for word, wtype in tuple_list:
             print('************%s*****'%wtype)
-            list_forms =generator.generate_forms(word, word_type=wtype)
+            list_forms =generator.generate_forms(word, word_type=wtype, details=True)
+            pprint.pprint(list_forms)
+    @staticmethod
+    def test(tuple_list):
+        generator = alyahmor_genelex.genelex()
+
+        for word, wtype in tuple_list:
+            print('************%s*****'%wtype)
+            list_forms =generator.generate_forms(word, word_type=wtype, details=True)
             pprint.pprint(list_forms)
             list_forms =generator.generate_forms(word, word_type=wtype, vocalized = False)
             pprint.pprint(list_forms)
@@ -169,6 +177,10 @@ class abstracttester:
             tuple_list = [l.strip().split('\t') for l in lines]
             # ~ tuple_list = [l.decode('utf8').strip().split('\t') for l in lines]
             self.test2(tuple_list)
+        if command =="details":
+            tuple_list = [l.strip().split('\t') for l in lines]
+            # ~ tuple_list = [l.decode('utf8').strip().split('\t') for l in lines]
+            self.test_details(tuple_list)
         elif command =="affix":
             self.test_affix()
         elif command =="gen_one":
@@ -198,6 +210,7 @@ def main(args):
         print("Can't Open file %s"%filename)
         sys.exit()
     lines = myfile.readlines()
+    lines = [line for line in lines if not line.startswith("#")]
     debug=True;
     limit=500
     #~ command = "affix"
