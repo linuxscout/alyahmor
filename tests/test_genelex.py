@@ -61,13 +61,16 @@ class abstracttester:
     def test(tuple_list):
         generator = alyahmor_genelex.genelex()
 
-        for word, wtype in tuple_list:
+        for tup in tuple_list:
+            word = tup[0]
+            wtype = tup[1]
+            future_type = tup[3] if len(tup)>=4 else "فتحة";
             print('************%s*****'%wtype)
-            list_forms =generator.generate_forms(word, word_type=wtype, details=True)
+            list_forms =generator.generate_forms(word, word_type=wtype, details=True, future_type=future_type)
             pprint.pprint(list_forms)
-            list_forms =generator.generate_forms(word, word_type=wtype, vocalized = False)
+            list_forms =generator.generate_forms(word, word_type=wtype, vocalized = False, future_type=future_type)
             pprint.pprint(list_forms)
-            list_forms =generator.generate_forms(word, word_type=wtype, indexed=True)
+            list_forms =generator.generate_forms(word, word_type=wtype, indexed=True, future_type=future_type)
             pprint.pprint(list_forms)
             list_forms =generator.generate_affix_list(word_type=wtype, indexed=True)
             pprint.pprint(list_forms)

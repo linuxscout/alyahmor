@@ -63,7 +63,7 @@ class genelex:
         else:
             return self.get_unvocalized_forms(forms)
 
-    def generate_forms(self, word, word_type="noun", vocalized=True, indexed=False, affixes =[], details = False):
+    def generate_forms(self, word, word_type="noun", vocalized=True, indexed=False, affixes =[], details = False, future_type="فتحة"):
         """
         Generate forms fo a given word
         
@@ -83,7 +83,7 @@ class genelex:
         if wtype=="noun":
             forms = self.generate_noun_forms(word)        
         elif wtype=="verb":
-            forms = self.generate_verb_forms(word)            
+            forms = self.generate_verb_forms(word, future_type)
 
         else:
             forms = self.generate_noun_forms(word)
@@ -157,7 +157,7 @@ class genelex:
         if wtype=="noun":
             affix_list=  self.generate_noun_affix_list()
         elif wtype=="verb":
-            affix_list=  self.generate_verb_affix_list()            
+            affix_list=  self.generate_verb_affix_list()
         else:
             affix_list=  self.generate_noun_affix_list()            
 
@@ -184,15 +184,15 @@ class genelex:
         """ generate all affixes """
         return self.noun_vocalizer.generate_affix_list()
         
-    def generate_verb_forms(self, word):
+    def generate_verb_forms(self, word, future_type="فتحة"):
         """ generate all possible affixes"""
-        return self.verb_vocalizer.generate_forms(word)        
+        return self.verb_vocalizer.generate_forms(word, future_type)
 
     def generate_verb_affix_list(self, ):
         """ generate all affixes """
         return self.verb_vocalizer.generate_affix_list()
         
-    def generate_verb_affix_list(self, ):
+    def generate_verb_affix_list(self):
         """ generate all affixes """
         return self.verb_vocalizer.generate_affix_list()
         

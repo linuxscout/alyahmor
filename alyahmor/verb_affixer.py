@@ -150,7 +150,7 @@ class verb_affixer(basic_affixer.basic_affixer):
                 word_tuple_list.append((vocalized, semivocalized, segmented_word))
         return word_tuple_list
         
-    def generate_forms(self, word):
+    def generate_forms(self, word, future_type="فتحة"):
         """ generate all possible affixes"""
         # get procletics
 
@@ -162,12 +162,12 @@ class verb_affixer(basic_affixer.basic_affixer):
             suff = element[2]
             enc = element[3]
             
-            newwordlist = self.get_form(word, proc, pref, suff, enc)
+            newwordlist = self.get_form(word, proc, pref, suff, enc, future_type)
             if newwordlist:
                 verb_forms.extend(newwordlist)
         return verb_forms
 
-    def generate_by_affixes(self, word, affixes = []):
+    def generate_by_affixes(self, word, affixes = [], future_type="فتحة"):
         """ generate all possible word forms by given affixes"""
         # get procletics
         verb_forms = []
@@ -179,10 +179,10 @@ class verb_affixer(basic_affixer.basic_affixer):
         # test if affixes are in affixes list
         if (proc not in self.procletics or pref not in self.prefixes or  suff not in self.suffixes or enc not in self.enclitics):
             return []
-        verb_forms = self.get_form(word, proc, pref,suff, enc)
+        verb_forms = self.get_form(word, proc, pref,suff, enc, future_type)
         return verb_forms         
     
-    def get_form(self, word, proc, pref, suff, enc):
+    def get_form(self, word, proc, pref, suff, enc, future_type="فتحة"):
         """ generate the possible affixes"""
         # get procletics
 
@@ -191,7 +191,7 @@ class verb_affixer(basic_affixer.basic_affixer):
         newword = u""
         transitive = True
         
-        future_type= ar.FATHA
+        # future_type= ar.FATHA
         vbc = libqutrub.classverb.VerbClass(word, transitive,future_type)        
         if self.is_valid_affix(pref, suff):
             affix = pref+'-'+suff

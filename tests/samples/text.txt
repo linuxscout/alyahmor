@@ -1,3 +1,4 @@
-سأل	verb
-كتاب	noun
-اسم	noun
+قام	verb		ضمة
+#سأل	verb
+#كتاب	noun
+#اسم	noun
