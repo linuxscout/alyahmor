@@ -1,7 +1,10 @@
 # Alyahmor اليحمور
 Arabic flexionnal morphology generator
 
+![Alyahmor](doc/alyahmor.png)
+
 ## Description
+
 The Alyahmor produce a word form from (prefix, lemma, suffix).
 It has many functionalities:
 - Generate word forms from given word and affixes
