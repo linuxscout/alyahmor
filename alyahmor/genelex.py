@@ -25,15 +25,16 @@
 import itertools
 import pprint
 import pyarabic.araby as araby
-
-from . import noun_affixer
-from . import verb_affixer
+import noun_affixer
+import verb_affixer
+import stopword_affixer
 
 class genelex:
     
     def __init__(self,):
         self.verb_vocalizer = verb_affixer.verb_affixer()        
         self.noun_vocalizer = noun_affixer.noun_affixer()        
+        self.stopword_vocalizer = stopword_affixer.stopword_affixer()
         pass
     def generate_by_affixes(self, word, word_type="noun", affixes =[], vocalized=True,):
         """
@@ -54,7 +55,9 @@ class genelex:
         if wtype=="noun":
             forms = self.noun_vocalizer.generate_by_affixes(word, affixes)        
         elif wtype=="verb":
-            forms = self.verb_vocalizer.generate_by_affixes(word, affixes)        
+            forms = self.verb_vocalizer.generate_by_affixes(word, affixes)
+        elif wtype=="stopword":
+            forms = self.stopword_vocalizer.generate_by_affixes(word, affixes)
 
         else:
             forms = self.noun_vocalizer.generate_by_affixes(word, affixes) 
@@ -84,6 +87,8 @@ class genelex:
             forms = self.generate_noun_forms(word)        
         elif wtype=="verb":
             forms = self.generate_verb_forms(word, future_type)
+        elif wtype=="stopword":
+            forms = self.generate_stopword_forms(word)
 
         else:
             forms = self.generate_noun_forms(word)
@@ -158,6 +163,8 @@ class genelex:
             affix_list=  self.generate_noun_affix_list()
         elif wtype=="verb":
             affix_list=  self.generate_verb_affix_list()
+        elif wtype=="stopword":
+            affix_list=  self.generate_stopword_affix_list()
         else:
             affix_list=  self.generate_noun_affix_list()            
 
@@ -183,6 +190,8 @@ class genelex:
     def generate_noun_affix_list(self,):
         """ generate all affixes """
         return self.noun_vocalizer.generate_affix_list()
+
+
         
     def generate_verb_forms(self, word, future_type="فتحة"):
         """ generate all possible affixes"""
@@ -191,11 +200,21 @@ class genelex:
     def generate_verb_affix_list(self, ):
         """ generate all affixes """
         return self.verb_vocalizer.generate_affix_list()
-        
+
+
     def generate_verb_affix_list(self):
         """ generate all affixes """
         return self.verb_vocalizer.generate_affix_list()
-        
+
+    def generate_stopword_forms(self, word):
+        """ generate all possible affixes"""
+        # get procletics
+        return self.stopword_vocalizer.generate_forms(word)
+
+    def generate_stopword_affix_list(self,):
+        """ generate all affixes """
+        return self.stopword_vocalizer.generate_affix_list()
+
     def get_unvocalized_forms(self, forms = []):
         """ display unvocalized forms"""
         if not forms:
@@ -277,6 +296,9 @@ def main(args):
 
     word = u"قصد"    
     verb_forms =generator.generate_verb_forms(word)
+
+    word = u"إلى"
+    stop_forms =generator.generate_stopword_forms(word)
     
     print ('NOUN_AFFIX_LIST=')
     noun_affixes = generator.generate_noun_affix_list()
@@ -285,6 +307,10 @@ def main(args):
     print('VERB_AFFIX_LIST=')
     verb_affixes = generator.generate_verb_affix_list()
     pprint.pprint(verb_affixes)
+
+    print('STOP_AFFIX_LIST=')
+    stop_affixes = generator.generate_stopword_affix_list()
+    pprint.pprint(stop_affixes)
 
     return 0
 
