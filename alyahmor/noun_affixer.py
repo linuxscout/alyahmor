@@ -1,7 +1,7 @@
 ﻿#!/usr/bin/python
 # -*- coding=utf-8 -*-
 #-------------------------------------------------------------------------
-# Name:        stem_noun
+# Name:        noun_affixer
 # Purpose:     Arabic lexical analyser, provides feature for
 #~stemming arabic word as noun
 #
@@ -14,7 +14,7 @@
 """
     Arabic noun stemmer
 """
-from __future__ import absolute_import
+#from __future__ import absolute_import
 import re
 import sys
 import pprint

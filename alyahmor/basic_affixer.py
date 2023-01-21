@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 #-----------------------------------------------------------------------
-# Name:        verb_affixer
+# Name:        basic_affixer
 # Purpose:     Arabic lexical analyser, provides feature for
-#  stemming arabic word as verb
+#  stemming arabic word as verb/nouns/stopwords
 #
 # Author:      Taha Zerrouki (taha.zerrouki[at]gmail.com)
 #
