@@ -19,7 +19,7 @@ It has many functionalities:
 Features |   value
 ---------|---------------------------------------------------------------------------------
 Authors  | [Authors.md](https://github.com/linuxscout/alyahmor/master/AUTHORS.md)
-Release  | 0.1 
+Release  | 0.2 
 License  |[GPL](https://github.com/linuxscout/alyahmor/master/LICENSE)
 Tracker  |[linuxscout/alyahmor/Issues](https://github.com/linuxscout/alyahmor/issues)
 Accounts  |[@Twitter](https://twitter.com/linuxscout) 
@@ -59,6 +59,7 @@ or in bibtex format
     - Generate word forms from given word and affixes
     - Generate all word forms by adding verbal or nominal affixes according to word type
     - Generate all affixes combination for verbs or nouns which can be used in morphology analysis.
+    - Generate Stopwords forms 
 
 
 
@@ -130,6 +131,17 @@ To generate all forms of the word كتاب as verb, use
 ....]
 ```
 
+### Stop words
+To generate all forms of the word إلى as stopword, use
+``` python
+>>> import alyahmor.genelex
+>>> generator = alyahmor.genelex.genelex()
+>>> word = "إلى"
+>>> stop_forms = generator.generate_forms( word, word_type="stopword")
+>>> stop_forms
+['أَإِلَى', 'أَإِلَييّ', 'أَإِلَيْكَ', 'أَإِلَيْكُمَا', 'أَإِلَيْكُمْ', 'أَإِلَيْكُنَّ', 'أَإِلَيْكِ', 'أَإِلَيْنَا',
+....]
+```
 #### Generate non vocalized forms
 To generate all forms of the word كتاب as noun without vocalization  use 
 ``` python
