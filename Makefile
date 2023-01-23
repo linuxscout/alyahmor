@@ -20,12 +20,8 @@ md2html:
 	pandoc -s -r markdown -w html README.md -o README.html
 
 wheel:
-	sudo python setup.py bdist_wheel
-wheel3:
 	sudo python3 setup.py bdist_wheel
 install:
-	sudo python setup.py install
-install3:
 	sudo python3 setup.py install
 sdist:
 	sudo python3 setup.py sdist
@@ -42,4 +38,8 @@ testqrn:
 	cd tests;python3 test_genelex.py -f samples/text.txt -o output/text.csv > output/text.out.txt
 testaffix:
 	cd tests;python3 test_print_affixes.py > output/affixes.text
+teststops:
+    # test stopwords generation based on arabicstopwords library
+	cd tests;python3 test_stop_affixer_global.py> output/st.txt
+
 
