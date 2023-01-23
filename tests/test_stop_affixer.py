@@ -38,3 +38,6 @@ pprint(x)
 word = "إلى"
 stop_forms = generator.generate_forms( word, word_type="stopword")
 print(stop_forms)
+print("-------Details-----------")
+stop_forms = generator.generate_forms( word, word_type="stopword", details=True)
+print(stop_forms)

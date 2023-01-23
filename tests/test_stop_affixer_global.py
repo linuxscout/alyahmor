@@ -35,6 +35,7 @@ limit = 1000
 # stop_lemmas =  ["إِلَىَ", "سِوّى"]
 # stop_lemmas =  ["أَنَّ",]
 # stop_lemmas =  ["هذا",]
+# stop_lemmas =  ["بعد",]
 
 wrong_generation = {}
 nb_diff_expected  = 0

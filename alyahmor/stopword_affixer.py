@@ -61,6 +61,23 @@ class stopword_affixer(basic_affixer.basic_affixer):
         self.suffixes_tags = SSC.CONJ_SUFFIX_LIST_TAGS
         # get enclitics:
         self.enclitics_tags = SSC.COMP_SUFFIX_LIST_TAGS
+
+        # New Configuration
+        self.procletics = list(SSC.VOCALIZED_INDEX_COMP_PREFIX_LIST_TAGS.keys())
+        # ~ # get prefixes
+        self.prefixes = []
+        # get suffixes
+        self.suffixes = list(SSC.VOCALIZED_INDEX_CONJ_SUFFIX_LIST_TAGS.keys())
+        # get enclitics:
+        self.enclitics = list(SSC.VOCALIZED_INDEX_COMP_SUFFIX_LIST_TAGS.keys())
+
+        self.procletics_tags = SSC.VOCALIZED_INDEX_COMP_PREFIX_LIST_TAGS
+        # ~ # get prefixes
+        self.prefixes_tags = []
+        # get suffixes
+        self.suffixes_tags = SSC.VOCALIZED_INDEX_CONJ_SUFFIX_LIST_TAGS
+        # get enclitics:
+        self.enclitics_tags = SSC.VOCALIZED_INDEX_COMP_SUFFIX_LIST_TAGS
         # ~ self.affixes_tags = SSC.STOPWORDS_CONJUGATION_AFFIX_TAGS
         # ~ self.clitics_tags = SSC.COMP_stopword_AFFIXES_TAGS
 
@@ -330,7 +347,8 @@ class stopword_affixer(basic_affixer.basic_affixer):
         # procletic = ar.strip_tashkeel(procletic)
         # ~ encletic = encletic_nm
         # ~ suffix = suffix_nm
-
+        if isinstance(affix_tags, str):
+            affix_tags = affix_tags.split(":")
         if u"عطف" in affix_tags and not stop_tuple['has_conjuction']:
             return False
         if u"تعريف" in affix_tags and not stop_tuple['has_definition']:
@@ -445,9 +463,9 @@ class stopword_affixer(basic_affixer.basic_affixer):
                 # because those vocalizations already exist in the list
                 # print(vocalized_word, "-".join([proc, suff, enc]))
 
-                proc_tags = self.procletics_tags.get(proc, {})
-                if len(proc_tags.get("vocalized", [])) > 1:
-                    continue
+                # proc_tags = self.procletics_tags.get(proc, {})
+                # if len(proc_tags.get("vocalized", [])) > 1:
+                #     continue
                 # if a enceletic has many vocalized from
                 # pass,
                 # because those vocalizations already exist in the list
@@ -458,7 +476,12 @@ class stopword_affixer(basic_affixer.basic_affixer):
                 tags = self.get_tags(vocalized_word, proc, suff, enc)
 
                 # validate stopwords forms agnaist classified stopwords dictionary
-                # print(vocalized_word, "-".join([proc, suff, enc]),tags, self.validate_tags(stop_tuple, tags, proc, enc))
+                if False: #DEBUG
+                # if True: #DEBUG
+                    affix =  "-".join([proc, suff, enc])
+                    affix_nm =  ar.strip_tashkeel(affix)
+                    print("\t".join([vocalized_word,affix, affix_nm,tags,
+                                     str(self.validate_tags(stop_tuple, tags, proc, enc))]))
                 if self.validate_tags(stop_tuple, tags, proc, enc):
                     # print(vocalized_word, "-".join([proc, suff, enc]),tags, self.validate_tags(stop_tuple, tags, proc, enc))
                     # print(stop_tuple)
