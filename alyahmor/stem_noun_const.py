@@ -51,7 +51,7 @@ COMP_PREFIX_LIST_TAGS = {
             u'عطف',
             u'استفهام',
         ),
-        "vocalized": (u"أَوََ", )
+        "vocalized": (u"أَوَ", )
     },
     u'ف': {
         'tags': (u'عطف', ),
