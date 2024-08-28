@@ -11,6 +11,12 @@ It has many functionalities:
 - Generate all word forms by adding verbal or nominal affixes according to word type
 - Generate all affixes combination for verbs or nouns which can be used in morphology analysis.
 
+ مكتبة اليحمور يُولّد أشكال الكلمات من (الأصل، والسوابق واللواحق). ويخدم وظائف مثل:
+ - إنشاء أشكال الكلمات من الكلمة والزوائد المعطاة 
+-  توليد أشكال الكلمات بزيادة اللواحق الاسمية أو الفعلية وفقًا لنوع الكلمة 
+- توليد قوائم اللواحق للأفعال أو الأسماء لاستخدامها في التحليل الصرفي
+
+
 
 #### Developpers: 
  Taha Zerrouki: http://tahadz.com
